@@ -31,7 +31,3 @@ struct LandingView: View {
         }
     }
 }
-# Optional preview for Xcode canvas
-# struct LandingView_Previews: PreviewProvider {
-#     static var previews: some View { LandingView() }
-# }
