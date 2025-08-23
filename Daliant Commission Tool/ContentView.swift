@@ -90,8 +90,7 @@ struct ProjectDetailPlaceholder: View {
     var project: Item
     var body: some View {
         VStack(spacing: 12) {
-            Text("Project")
-                .font(.title2).bold()
+            Text("Project").font(.title2).bold()
             Text(project.name)
             Text("Address pool used: \(project.addressPoolUsed)")
                 .foregroundStyle(.secondary)
@@ -100,6 +99,8 @@ struct ProjectDetailPlaceholder: View {
         .navigationTitle(project.name)
     }
 }
+
+// MARK: - Previews
 
 #Preview("Landing – Light") {
     ContentView()
@@ -112,36 +113,23 @@ struct ProjectDetailPlaceholder: View {
         .modelContainer(for: Item.self, inMemory: true)
 }
 
-#Preview("Projects") {
-    // Seed a couple of preview projects
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Item.self, configurations: config)
-    let context = container.mainContext
-    context.insert(Item(name: "Smith Residence"))
-    context.insert(Item(name: "Beach House"))
-    return NavigationStack { ProjectsHomeView() }
-        .modelContainer(container)
+/// Seed an in-memory container for Canvas previews (runs on the main actor).
+@MainActor
+private func previewSeededContainer() -> ModelContainer {
+    let cfg = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Item.self, configurations: cfg)
+    let ctx = container.mainContext
+    ctx.insert(Item(name: "Smith Residence"))
+    ctx.insert(Item(name: "Beach House"))
+    return container
 }
 
-// --- Preview seeding so Landing → Projects shows sample rows in Canvas ---
-private enum PreviewData {
-    static func seededContainer() -> ModelContainer {
-        let cfg = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try! ModelContainer(for: Item.self, configurations: cfg)
-        let ctx = container.mainContext
-        ctx.insert(Item(name: "Smith Residence"))
-        ctx.insert(Item(name: "Beach House"))
-        return container
-    }
+#Preview("Projects (Seeded)") {
+    NavigationStack { ProjectsHomeView() }
+        .modelContainer(previewSeededContainer())
 }
 
 #Preview("Landing – Seeded") {
     ContentView()
-        .modelContainer(PreviewData.seededContainer())
-}
-
-#Preview("Landing – Dark (Seeded)") {
-    ContentView()
-        .preferredColorScheme(.dark)
-        .modelContainer(PreviewData.seededContainer())
+        .modelContainer(previewSeededContainer())
 }
