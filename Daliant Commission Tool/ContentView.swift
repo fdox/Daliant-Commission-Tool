@@ -31,3 +31,11 @@ struct ContentView: View {
         }
     }
 }
+#Preview("Landing – Light") {
+    ContentView()
+}
+
+#Preview("Landing – Dark") {
+    ContentView()
+        .preferredColorScheme(.dark)
+}
