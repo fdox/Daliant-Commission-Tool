@@ -1,0 +1,563 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		9E505B522E5A4F6500B1BFE2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9E505B3A2E5A4F6300B1BFE2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9E505B412E5A4F6300B1BFE2;
+			remoteInfo = "Daliant Commission Tool";
+		};
+		9E505B5C2E5A4F6500B1BFE2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9E505B3A2E5A4F6300B1BFE2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9E505B412E5A4F6300B1BFE2;
+			remoteInfo = "Daliant Commission Tool";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		9E505B422E5A4F6300B1BFE2 /* Daliant Commission Tool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Daliant Commission Tool.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E505B512E5A4F6500B1BFE2 /* Daliant Commission ToolTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Daliant Commission ToolTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E505B5B2E5A4F6500B1BFE2 /* Daliant Commission ToolUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Daliant Commission ToolUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		9E505B442E5A4F6300B1BFE2 /* Daliant Commission Tool */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Daliant Commission Tool";
+			sourceTree = "<group>";
+		};
+		9E505B542E5A4F6500B1BFE2 /* Daliant Commission ToolTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Daliant Commission ToolTests";
+			sourceTree = "<group>";
+		};
+		9E505B5E2E5A4F6500B1BFE2 /* Daliant Commission ToolUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Daliant Commission ToolUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9E505B3F2E5A4F6300B1BFE2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E505B4E2E5A4F6500B1BFE2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E505B582E5A4F6500B1BFE2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		9E505B392E5A4F6300B1BFE2 = {
+			isa = PBXGroup;
+			children = (
+				9E505B442E5A4F6300B1BFE2 /* Daliant Commission Tool */,
+				9E505B542E5A4F6500B1BFE2 /* Daliant Commission ToolTests */,
+				9E505B5E2E5A4F6500B1BFE2 /* Daliant Commission ToolUITests */,
+				9E505B432E5A4F6300B1BFE2 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9E505B432E5A4F6300B1BFE2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9E505B422E5A4F6300B1BFE2 /* Daliant Commission Tool.app */,
+				9E505B512E5A4F6500B1BFE2 /* Daliant Commission ToolTests.xctest */,
+				9E505B5B2E5A4F6500B1BFE2 /* Daliant Commission ToolUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9E505B412E5A4F6300B1BFE2 /* Daliant Commission Tool */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9E505B652E5A4F6500B1BFE2 /* Build configuration list for PBXNativeTarget "Daliant Commission Tool" */;
+			buildPhases = (
+				9E505B3E2E5A4F6300B1BFE2 /* Sources */,
+				9E505B3F2E5A4F6300B1BFE2 /* Frameworks */,
+				9E505B402E5A4F6300B1BFE2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				9E505B442E5A4F6300B1BFE2 /* Daliant Commission Tool */,
+			);
+			name = "Daliant Commission Tool";
+			packageProductDependencies = (
+			);
+			productName = "Daliant Commission Tool";
+			productReference = 9E505B422E5A4F6300B1BFE2 /* Daliant Commission Tool.app */;
+			productType = "com.apple.product-type.application";
+		};
+		9E505B502E5A4F6500B1BFE2 /* Daliant Commission ToolTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9E505B682E5A4F6500B1BFE2 /* Build configuration list for PBXNativeTarget "Daliant Commission ToolTests" */;
+			buildPhases = (
+				9E505B4D2E5A4F6500B1BFE2 /* Sources */,
+				9E505B4E2E5A4F6500B1BFE2 /* Frameworks */,
+				9E505B4F2E5A4F6500B1BFE2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9E505B532E5A4F6500B1BFE2 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				9E505B542E5A4F6500B1BFE2 /* Daliant Commission ToolTests */,
+			);
+			name = "Daliant Commission ToolTests";
+			packageProductDependencies = (
+			);
+			productName = "Daliant Commission ToolTests";
+			productReference = 9E505B512E5A4F6500B1BFE2 /* Daliant Commission ToolTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		9E505B5A2E5A4F6500B1BFE2 /* Daliant Commission ToolUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9E505B6B2E5A4F6500B1BFE2 /* Build configuration list for PBXNativeTarget "Daliant Commission ToolUITests" */;
+			buildPhases = (
+				9E505B572E5A4F6500B1BFE2 /* Sources */,
+				9E505B582E5A4F6500B1BFE2 /* Frameworks */,
+				9E505B592E5A4F6500B1BFE2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9E505B5D2E5A4F6500B1BFE2 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				9E505B5E2E5A4F6500B1BFE2 /* Daliant Commission ToolUITests */,
+			);
+			name = "Daliant Commission ToolUITests";
+			packageProductDependencies = (
+			);
+			productName = "Daliant Commission ToolUITests";
+			productReference = 9E505B5B2E5A4F6500B1BFE2 /* Daliant Commission ToolUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9E505B3A2E5A4F6300B1BFE2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					9E505B412E5A4F6300B1BFE2 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					9E505B502E5A4F6500B1BFE2 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 9E505B412E5A4F6300B1BFE2;
+					};
+					9E505B5A2E5A4F6500B1BFE2 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 9E505B412E5A4F6300B1BFE2;
+					};
+				};
+			};
+			buildConfigurationList = 9E505B3D2E5A4F6300B1BFE2 /* Build configuration list for PBXProject "Daliant Commission Tool" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 9E505B392E5A4F6300B1BFE2;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 9E505B432E5A4F6300B1BFE2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9E505B412E5A4F6300B1BFE2 /* Daliant Commission Tool */,
+				9E505B502E5A4F6500B1BFE2 /* Daliant Commission ToolTests */,
+				9E505B5A2E5A4F6500B1BFE2 /* Daliant Commission ToolUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9E505B402E5A4F6300B1BFE2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E505B4F2E5A4F6500B1BFE2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E505B592E5A4F6500B1BFE2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9E505B3E2E5A4F6300B1BFE2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E505B4D2E5A4F6500B1BFE2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E505B572E5A4F6500B1BFE2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		9E505B532E5A4F6500B1BFE2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9E505B412E5A4F6300B1BFE2 /* Daliant Commission Tool */;
+			targetProxy = 9E505B522E5A4F6500B1BFE2 /* PBXContainerItemProxy */;
+		};
+		9E505B5D2E5A4F6500B1BFE2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9E505B412E5A4F6300B1BFE2 /* Daliant Commission Tool */;
+			targetProxy = 9E505B5C2E5A4F6500B1BFE2 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		9E505B632E5A4F6500B1BFE2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = U4QP29H236;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		9E505B642E5A4F6500B1BFE2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = U4QP29H236;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		9E505B662E5A4F6500B1BFE2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = U4QP29H236;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.daliantlighting.Daliant-Commission-Tool";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9E505B672E5A4F6500B1BFE2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = U4QP29H236;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.daliantlighting.Daliant-Commission-Tool";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		9E505B692E5A4F6500B1BFE2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = U4QP29H236;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.daliantlighting.Daliant-Commission-ToolTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Daliant Commission Tool.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Daliant Commission Tool";
+			};
+			name = Debug;
+		};
+		9E505B6A2E5A4F6500B1BFE2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = U4QP29H236;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.daliantlighting.Daliant-Commission-ToolTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Daliant Commission Tool.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Daliant Commission Tool";
+			};
+			name = Release;
+		};
+		9E505B6C2E5A4F6500B1BFE2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = U4QP29H236;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.daliantlighting.Daliant-Commission-ToolUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Daliant Commission Tool";
+			};
+			name = Debug;
+		};
+		9E505B6D2E5A4F6500B1BFE2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = U4QP29H236;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.daliantlighting.Daliant-Commission-ToolUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Daliant Commission Tool";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9E505B3D2E5A4F6300B1BFE2 /* Build configuration list for PBXProject "Daliant Commission Tool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9E505B632E5A4F6500B1BFE2 /* Debug */,
+				9E505B642E5A4F6500B1BFE2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9E505B652E5A4F6500B1BFE2 /* Build configuration list for PBXNativeTarget "Daliant Commission Tool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9E505B662E5A4F6500B1BFE2 /* Debug */,
+				9E505B672E5A4F6500B1BFE2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9E505B682E5A4F6500B1BFE2 /* Build configuration list for PBXNativeTarget "Daliant Commission ToolTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9E505B692E5A4F6500B1BFE2 /* Debug */,
+				9E505B6A2E5A4F6500B1BFE2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9E505B6B2E5A4F6500B1BFE2 /* Build configuration list for PBXNativeTarget "Daliant Commission ToolUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9E505B6C2E5A4F6500B1BFE2 /* Debug */,
+				9E505B6D2E5A4F6500B1BFE2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9E505B3A2E5A4F6300B1BFE2 /* Project object */;
+}
