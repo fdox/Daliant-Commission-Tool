@@ -25,7 +25,7 @@ struct Daliant_Commission_ToolApp: App {
 
     var body: some Scene {
         WindowGroup {
-            LandingView()
+            ContentView()
         }
         .modelContainer(sharedModelContainer)
     }
