@@ -122,3 +122,26 @@ struct ProjectDetailPlaceholder: View {
     return NavigationStack { ProjectsHomeView() }
         .modelContainer(container)
 }
+
+// --- Preview seeding so Landing → Projects shows sample rows in Canvas ---
+private enum PreviewData {
+    static func seededContainer() -> ModelContainer {
+        let cfg = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try! ModelContainer(for: Item.self, configurations: cfg)
+        let ctx = container.mainContext
+        ctx.insert(Item(name: "Smith Residence"))
+        ctx.insert(Item(name: "Beach House"))
+        return container
+    }
+}
+
+#Preview("Landing – Seeded") {
+    ContentView()
+        .modelContainer(PreviewData.seededContainer())
+}
+
+#Preview("Landing – Dark (Seeded)") {
+    ContentView()
+        .preferredColorScheme(.dark)
+        .modelContainer(PreviewData.seededContainer())
+}
