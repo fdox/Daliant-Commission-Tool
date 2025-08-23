@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ContentView: View {
+struct LandingView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 24) {
@@ -31,3 +31,7 @@ struct ContentView: View {
         }
     }
 }
+# Optional preview for Xcode canvas
+# struct LandingView_Previews: PreviewProvider {
+#     static var previews: some View { LandingView() }
+# }
