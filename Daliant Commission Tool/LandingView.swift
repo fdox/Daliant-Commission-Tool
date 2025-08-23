@@ -1,10 +1,3 @@
-//
-//  LandingView.swift
-//  Daliant Commission Tool
-//
-//  Created by Fred Dox on 8/23/25.
-//
-
 import SwiftUI
 
 struct LandingView: View {
@@ -12,12 +5,11 @@ struct LandingView: View {
         NavigationStack {
             VStack(spacing: 24) {
                 Spacer()
-                Image(systemName: "lightbulb")  // temporary logo
+                Image(systemName: "lightbulb")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 96)
                     .foregroundStyle(.yellow)
-                    .accessibilityHidden(true)
 
                 Text("Daliant Commission Tool")
                     .font(.title).bold()
@@ -27,7 +19,7 @@ struct LandingView: View {
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.secondary)
 
-                NavigationLink("Continue", destination: ProjectsPlaceholderView())
+                NavigationLink("Continue", destination: Text("Projects (coming soon)"))
                     .buttonStyle(.borderedProminent)
 
                 Spacer()
@@ -39,17 +31,7 @@ struct LandingView: View {
         }
     }
 }
-
-struct ProjectsPlaceholderView: View {
-    var body: some View {
-        VStack(spacing: 12) {
-            Text("Projects")
-                .font(.title2).bold()
-            Text("This page will list your projects and let you create a new one.\nWe’ll wire it up in the next step.")
-                .multilineTextAlignment(.center)
-                .foregroundStyle(.secondary)
-                .padding()
-        }
-        .padding()
-    }
-}
+# Optional preview for Xcode canvas
+# struct LandingView_Previews: PreviewProvider {
+#     static var previews: some View { LandingView() }
+# }
