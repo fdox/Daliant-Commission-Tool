@@ -42,10 +42,8 @@ struct ProjectsHomeView: View {
             .navigationTitle("Projects")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button { showingSettings = true } label: {
-                        Image(systemName: "gearshape")
-                    }
-                    .accessibilityLabel("Settings")
+                    Button { showingSettings = true } label: { Image(systemName: "gearshape") }
+                        .accessibilityLabel("Settings")
                 }
             }
             .sheet(isPresented: $showingSettings) {
@@ -126,26 +124,54 @@ private struct ProjectCardRow: View {
     }
 }
 
-// MARK: - Preview helper: do seeding OUTSIDE the #Preview result builder
+// MARK: - Preview helper (seed OUTSIDE the #Preview)
 fileprivate enum PreviewFactory {
+    @MainActor
     static func projectsHome() -> some View {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try! ModelContainer(for: Org.self, Item.self, configurations: config)
         let context = container.mainContext
 
-        let org = Org(name: "Dox Electronics") // (no joinCode init in your model)
+        let org = Org(name: "Dox Electronics")
         context.insert(org)
 
-        let p1 = Item(name: "Smith Residence")
-        let p2 = Item(name: "Beach House")
+        // Your Item model currently uses 'title:'
+        let p1 = Item(title: "Smith Residence")
+        let p2 = Item(title: "Beach House")
         context.insert(p1)
         context.insert(p2)
-        _ = try? context.save()
 
+        _ = try? context.save()
         return ProjectsHomeView().modelContainer(container)
     }
 }
 
-#Preview("Projects — Seeded") {
-    PreviewFactory.projectsHome()
+#if DEBUG
+import SwiftData
+
+// Keep logic out of the #Preview body — build the view in a helper.
+private enum ProjectsPreviewFactory {
+    @MainActor
+    static func view() -> some View {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try! ModelContainer(for: Org.self, Item.self, configurations: config)
+        let context = container.mainContext
+
+        // Seed minimal data for Canvas
+        context.insert(Org(name: "Dox Electronics"))
+
+        // Your Item initializer currently uses `title:` (not `name:`).
+        context.insert(Item(title: "Smith Residence"))
+        context.insert(Item(title: "Beach House"))
+
+        _ = try? context.save()
+        return ProjectsHomeView()
+            .modelContainer(container)
+    }
 }
+
+#Preview("Projects — Seeded") {
+    ProjectsPreviewFactory.view()
+}
+#endif
+

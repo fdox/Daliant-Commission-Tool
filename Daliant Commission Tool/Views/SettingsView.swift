@@ -86,7 +86,7 @@ struct SettingsView: View {
                 newJoinCode = ""; return
             }
             for o in all { context.delete(o) }
-            let newOrg = Org(name: "Org (\(code))") // fallback: encode code into name
+            let newOrg = Org(name: "Org (\(code))") // fallback: encode code in name
             context.insert(newOrg)
             try context.save()
             newJoinCode = ""
@@ -105,13 +105,14 @@ struct SettingsView: View {
     }
 }
 
-// Preview helper (single expression in #Preview)
+// MARK: - Preview helper
 fileprivate enum SettingsPreviewFactory {
+    @MainActor
     static func seeded() -> some View {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try! ModelContainer(for: Org.self, Item.self, configurations: config)
         let context = container.mainContext
-        let org = Org(name: "Dox Electronics") // (no joinCode init in your model)
+        let org = Org(name: "Dox Electronics")
         context.insert(org)
         _ = try? context.save()
         return NavigationStack { SettingsView() }.modelContainer(container)
