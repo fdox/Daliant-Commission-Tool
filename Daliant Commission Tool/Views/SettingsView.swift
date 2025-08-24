@@ -6,7 +6,7 @@ struct SettingsView: View {
     @Environment(\.modelContext) private var context
     @AppStorage("signedInUserID") private var signedInUserID: String = ""
 
-    @Query(sort: [SortDescriptor(\\Org.createdAt, order: .forward)]) private var orgs: [Org]
+    @Query(sort: [SortDescriptor(\Org.createdAt, order: .forward)]) private var orgs: [Org]
 
     @State private var name: String = ""
     @State private var showDeleteAlert = false
@@ -70,6 +70,6 @@ struct SettingsView: View {
     let container = try! ModelContainer(for: Org.self, configurations: config)
     let ctx = ModelContext(container)
     ctx.insert(Org(name: "Daliant Lighting"))
-    return NavigationStack { SettingsView() }
+    NavigationStack { SettingsView() }
         .modelContainer(container)
 }

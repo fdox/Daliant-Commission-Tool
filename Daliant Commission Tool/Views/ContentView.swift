@@ -29,6 +29,6 @@ struct ContentView: View {
     ctx.insert(Org(name: "Daliant Lighting"))
     ctx.insert(Item(title: "Smith Residence"))
     ctx.insert(Item(title: "Beach House"))
-    return ContentView()
+    ContentView()
         .modelContainer(container)
 }

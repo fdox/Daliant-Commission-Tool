@@ -3,7 +3,7 @@ import SwiftData
 
 struct ProjectsHomeView: View {
     @Environment(\.modelContext) private var context
-    @Query(sort: [SortDescriptor(\\Item.createdAt, order: .forward)]) private var projects: [Item]
+    @Query(sort: [SortDescriptor(\Item.createdAt, order: .forward)]) private var projects: [Item]
     @State private var newTitle: String = ""
     @State private var showSettings = false
 
@@ -56,6 +56,6 @@ struct ProjectsHomeView: View {
     let ctx = ModelContext(container)
     ctx.insert(Item(title: "Sample A"))
     ctx.insert(Item(title: "Sample B"))
-    return NavigationStack { ProjectsHomeView() }
+    NavigationStack { ProjectsHomeView() }
         .modelContainer(container)
 }

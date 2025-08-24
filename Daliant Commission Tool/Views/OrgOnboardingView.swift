@@ -25,6 +25,6 @@ struct OrgOnboardingView: View {
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: Org.self, configurations: config)
-    return NavigationStack { OrgOnboardingView() }
+    NavigationStack { OrgOnboardingView() }
         .modelContainer(container)
 }
