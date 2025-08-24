@@ -3,8 +3,9 @@ import SwiftData
 
 struct ProjectsHomeView: View {
     @Environment(\.modelContext) private var context
-    @Query(sort: [SortDescriptor(\Item.createdAt, order: .forward)]) private var projects: [Item]
+    @Query(sort: [SortDescriptor(\\Item.createdAt, order: .forward)]) private var projects: [Item]
     @State private var newTitle: String = ""
+    @State private var showSettings = false
 
     var body: some View {
         List {
@@ -36,7 +37,16 @@ struct ProjectsHomeView: View {
             }
         }
         .navigationTitle("Projects")
-        .toolbar { ToolbarItem(placement: .topBarTrailing) { Image(systemName: "gearshape") } }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button { showSettings = true } label: {
+                    Image(systemName: "gearshape")
+                }
+            }
+        }
+        .sheet(isPresented: $showSettings) {
+            NavigationStack { SettingsView() }
+        }
     }
 }
 
