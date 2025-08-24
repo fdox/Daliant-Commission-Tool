@@ -21,3 +21,14 @@ struct ContentView: View {
     }
 }
 
+
+#Preview("Seeded App Flow") {
+    ContentView()
+        .modelContainer(for: [Org.self, Item.self], inMemory: true) { container in
+            let ctx = ModelContext(container)
+            // Seed data so flow chooses Projects
+            ctx.insert(Org(name: "Daliant Lighting"))
+            ctx.insert(Item(title: "Smith Residence"))
+            ctx.insert(Item(title: "Beach House"))
+        }
+}

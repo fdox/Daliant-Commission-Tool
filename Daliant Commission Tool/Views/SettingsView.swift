@@ -55,3 +55,13 @@ struct SettingsView: View {
         }
     }
 }
+
+#Preview("Seeded Settings") {
+    NavigationStack {
+        SettingsView()
+    }
+    .modelContainer(for: [Org.self], inMemory: true) { container in
+        let ctx = ModelContext(container)
+        ctx.insert(Org(name: "Daliant Lighting"))
+    }
+}
