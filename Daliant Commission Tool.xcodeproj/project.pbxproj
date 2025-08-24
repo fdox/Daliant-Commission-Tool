@@ -29,24 +29,6 @@
 		9E505B5B2E5A4F6500B1BFE2 /* Daliant Commission ToolUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Daliant Commission ToolUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		9E505B442E5A4F6300B1BFE2 /* Daliant Commission Tool */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Daliant Commission Tool";
-			sourceTree = "<group>";
-		};
-		9E505B542E5A4F6500B1BFE2 /* Daliant Commission ToolTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Daliant Commission ToolTests";
-			sourceTree = "<group>";
-		};
-		9E505B5E2E5A4F6500B1BFE2 /* Daliant Commission ToolUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Daliant Commission ToolUITests";
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
-
 /* Begin PBXFrameworksBuildPhase section */
 		9E505B3F2E5A4F6300B1BFE2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -75,9 +57,6 @@
 		9E505B392E5A4F6300B1BFE2 = {
 			isa = PBXGroup;
 			children = (
-				9E505B442E5A4F6300B1BFE2 /* Daliant Commission Tool */,
-				9E505B542E5A4F6500B1BFE2 /* Daliant Commission ToolTests */,
-				9E505B5E2E5A4F6500B1BFE2 /* Daliant Commission ToolUITests */,
 				9E505B432E5A4F6300B1BFE2 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -107,9 +86,6 @@
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				9E505B442E5A4F6300B1BFE2 /* Daliant Commission Tool */,
-			);
 			name = "Daliant Commission Tool";
 			packageProductDependencies = (
 			);
@@ -130,9 +106,6 @@
 			dependencies = (
 				9E505B532E5A4F6500B1BFE2 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				9E505B542E5A4F6500B1BFE2 /* Daliant Commission ToolTests */,
-			);
 			name = "Daliant Commission ToolTests";
 			packageProductDependencies = (
 			);
@@ -152,9 +125,6 @@
 			);
 			dependencies = (
 				9E505B5D2E5A4F6500B1BFE2 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				9E505B5E2E5A4F6500B1BFE2 /* Daliant Commission ToolUITests */,
 			);
 			name = "Daliant Commission ToolUITests";
 			packageProductDependencies = (
