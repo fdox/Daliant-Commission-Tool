@@ -39,20 +39,11 @@ struct ProjectsHomeView: View {
         .navigationTitle("Projects")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button { showSettings = true } label: {
-                    Image(systemName: "gearshape")
-                }
+                Button { showSettings = true } label: { Image(systemName: "gearshape") }
             }
         }
         .sheet(isPresented: $showSettings) {
             NavigationStack { SettingsView() }
         }
     }
-}
-
-#Preview {
-    NavigationStack { ProjectsHomeView() }
-        .modelContainer(for: [Item.self], inMemory: true)
-}
-        .modelContainer(container)
 }

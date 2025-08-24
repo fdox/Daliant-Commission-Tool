@@ -5,7 +5,6 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     @AppStorage("signedInUserID") private var signedInUserID: String = ""
-
     @Query(sort: [SortDescriptor(\Org.createdAt, order: .forward)]) private var orgs: [Org]
 
     @State private var name: String = ""
@@ -19,16 +18,11 @@ struct SettingsView: View {
                         .onAppear { name = org.name }
                     Button("Save Name") {
                         let newName = name.trimmingCharacters(in: .whitespaces)
-                        if !newName.isEmpty, newName != org.name {
-                            org.name = newName
-                        }
+                        if !newName.isEmpty, newName != org.name { org.name = newName }
                     }
                 }
-
                 Section {
-                    Button(role: .destructive) {
-                        showDeleteAlert = true
-                    } label: {
+                    Button(role: .destructive) { showDeleteAlert = true } label: {
                         Text("Delete Organization")
                     }
                 }
@@ -52,22 +46,12 @@ struct SettingsView: View {
         }
         .alert("Delete Organization?", isPresented: $showDeleteAlert) {
             Button("Delete", role: .destructive) {
-                if let org = orgs.first {
-                    context.delete(org)
-                    try? context.save()
-                }
+                if let org = orgs.first { context.delete(org); try? context.save() }
                 dismiss()
             }
             Button("Cancel", role: .cancel) { }
         } message: {
-            Text("This will remove your org from this device’s data store. You’ll be taken back to onboarding.")
+            Text("This removes your org from this device’s data store.")
         }
     }
-}
-
-#Preview {
-    NavigationStack { SettingsView() }
-        .modelContainer(for: [Org.self], inMemory: true)
-}
-        .modelContainer(container)
 }

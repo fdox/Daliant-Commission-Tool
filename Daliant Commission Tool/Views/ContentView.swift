@@ -21,7 +21,3 @@ struct ContentView: View {
     }
 }
 
-#Preview {
-    ContentView()
-        .modelContainer(for: [Org.self, Item.self], inMemory: true)
-}
