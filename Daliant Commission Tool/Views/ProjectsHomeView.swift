@@ -48,14 +48,21 @@ struct ProjectsHomeView: View {
     }
 }
 
-#Preview("Seeded ProjectsHome") {
-    NavigationStack {
-        ProjectsHomeView()
-    }
     .modelContainer(for: [Item.self], inMemory: true) { container in
         let ctx = ModelContext(container)
         ctx.insert(Item(title: "Smith Residence"))
         ctx.insert(Item(title: "Beach House"))
         ctx.insert(Item(title: "Penthouse Commissioning"))
     }
+}
+
+#Preview("Seeded ProjectsHome") {
+    NavigationStack { ProjectsHomeView() }
+        .modelContainer(
+            PreviewSeed.container([Item.self]) { ctx in
+                ctx.insert(Item(title: "Smith Residence"))
+                ctx.insert(Item(title: "Beach House"))
+                ctx.insert(Item(title: "Penthouse Commissioning"))
+            }
+        )
 }
