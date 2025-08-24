@@ -12,19 +12,13 @@ struct OrgOnboardingView: View {
             }
             Section {
                 Button("Create Organization") {
-                    guard !name.trimmingCharacters(in: .whitespaces).isEmpty else { return }
-                    context.insert(Org(name: name.trimmingCharacters(in: .whitespaces)))
+                    let trimmed = name.trimmingCharacters(in: .whitespaces)
+                    guard !trimmed.isEmpty else { return }
+                    context.insert(Org(name: trimmed))
                 }
                 .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
             }
         }
         .navigationTitle("Welcome")
     }
-
-
-#Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Org.self, configurations: config)
-    NavigationStack { OrgOnboardingView() }
-        .modelContainer(container)
-
+}

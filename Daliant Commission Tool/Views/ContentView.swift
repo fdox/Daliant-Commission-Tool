@@ -19,18 +19,4 @@ struct ContentView: View {
             }
         }
     }
-
-
-
-
-
-#Preview("Seeded App Flow") {
-    ContentView()
-        .modelContainer(
-            PreviewSeed.container([Org.self, Item.self]) { ctx in
-                ctx.insert(Org(name: "Daliant Lighting"))
-                ctx.insert(Item(title: "Smith Residence"))
-                ctx.insert(Item(title: "Beach House"))
-            }
-        )
-
+}

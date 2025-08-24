@@ -9,7 +9,7 @@ struct Daliant_Commission_ToolApp: App {
         }
         .modelContainer(sharedModelContainer)
     }
-
+}
 
 // MARK: - SwiftData Container
 let sharedModelContainer: ModelContainer = {
