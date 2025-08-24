@@ -3,7 +3,7 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var context
-    @Query(of: Org.self, sort: .createdAt) private var orgs: [Org]
+    @Query(sort: [SortDescriptor(\Org.createdAt, order: .forward)]) private var orgs: [Org]
     @AppStorage("signedInUserID") private var signedInUserID: String = ""
 
     var body: some View {

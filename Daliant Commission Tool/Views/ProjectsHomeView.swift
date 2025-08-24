@@ -3,7 +3,7 @@ import SwiftData
 
 struct ProjectsHomeView: View {
     @Environment(\.modelContext) private var context
-    @Query(of: Item.self, sort: .createdAt) private var projects: [Item]
+    @Query(sort: [SortDescriptor(\Item.createdAt, order: .forward)]) private var projects: [Item]
     @State private var newTitle: String = ""
 
     var body: some View {
