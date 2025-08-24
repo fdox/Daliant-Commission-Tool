@@ -9,7 +9,6 @@ struct ContentView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: \Org.createdAt) private var orgs: [Org]
 
-    // Store signed-in user id locally (simple; we can switch to Keychain later)
     @AppStorage("signedInUserID") private var signedInUserID: String = ""
 
     var body: some View {
@@ -63,12 +62,6 @@ struct SignInView: View {
             .frame(height: 44)
             .signInWithAppleButtonStyle(.black)
 
-            // Optional: allow offline use for now
-            NavigationLink("Continue without signing in") {
-                ProjectsHomeView()
-            }
-            .buttonStyle(.bordered)
-
             Spacer()
             Text("v0.1 • draft")
                 .font(.footnote)
@@ -101,11 +94,9 @@ struct OrgOnboardingView: View {
                     Text("Create Organization").font(.headline)
                     TextField("Organization Name", text: $orgName)
                         .textFieldStyle(.roundedBorder)
-                    Button("Create") {
-                        createOrg()
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(orgName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    Button("Create") { createOrg() }
+                        .buttonStyle(.borderedProminent)
+                        .disabled(orgName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
 
                 Divider().padding(.vertical, 8)
@@ -114,11 +105,9 @@ struct OrgOnboardingView: View {
                     Text("Join Organization").font(.headline)
                     TextField("Join Code", text: $joinCodeInput)
                         .textFieldStyle(.roundedBorder)
-                    Button("Join") {
-                        joinOrg(with: joinCodeInput)
-                    }
-                    .buttonStyle(.bordered)
-                    .disabled(joinCodeInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    Button("Join") { joinOrg(with: joinCodeInput) }
+                        .buttonStyle(.bordered)
+                        .disabled(joinCodeInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
 
                 if let message {
@@ -167,23 +156,26 @@ struct OrgOnboardingView: View {
         if let found = orgs.first(where: { $0.joinCode.uppercased() == codeTrim }) {
             message = "Joined “\(found.name)”."
         } else {
-            message = "No local organization found with that code (cloud sharing will come later)."
+            message = "No local organization found with that code."
         }
         joinCodeInput = ""
     }
 
     private static func makeJoinCode(length: Int = 6) -> String {
-        let alphabet = Array("ABCDEFGHJKLMNPQRSTUVWXYZ23456789") // no O/0 or I/1
+        let alphabet = Array("ABCDEFGHJKLMNPQRSTUVWXYZ23456789")
         return String((0..<length).map { _ in alphabet.randomElement()! })
     }
 }
 
-// MARK: - Projects (unchanged list + seeded previews)
+// MARK: - Projects (with Settings gear)
 
 struct ProjectsHomeView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: \Item.createdAt, order: .reverse) private var projects: [Item]
+    @Query(sort: \Org.createdAt) private var orgs: [Org]
+    @AppStorage("signedInUserID") private var signedInUserID: String = ""
     @State private var newName: String = ""
+    @State private var showSettings = false
 
     var body: some View {
         VStack(spacing: 12) {
@@ -192,7 +184,6 @@ struct ProjectsHomeView: View {
                     .textFieldStyle(.roundedBorder)
                     .submitLabel(.done)
                     .onSubmit(addProject)
-
                 Button("Add") { addProject() }
                     .buttonStyle(.borderedProminent)
                     .disabled(newName.trimmingCharacters(in: .whitespaces).isEmpty)
@@ -218,7 +209,21 @@ struct ProjectsHomeView: View {
             }
         }
         .navigationTitle("Projects")
-        .toolbar { EditButton() }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showSettings = true
+                } label: {
+                    Image(systemName: "gear")
+                }
+            }
+            ToolbarItem(placement: .topBarLeading) {
+                EditButton()
+            }
+        }
+        .sheet(isPresented: $showSettings) {
+            SettingsView()
+        }
     }
 
     private func addProject() {
@@ -228,6 +233,60 @@ struct ProjectsHomeView: View {
         newName = ""
     }
 }
+
+// MARK: - Settings
+
+struct SettingsView: View {
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var context
+    @Query(sort: \Org.createdAt) private var orgs: [Org]
+    @AppStorage("signedInUserID") private var signedInUserID: String = ""
+    @State private var joinCodeInput: String = ""
+    @State private var message: String?
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                if let org = orgs.first {
+                    Section(header: Text("Organization")) {
+                        Text("Name: \(org.name)")
+                        Text("Join code: \(org.joinCode)")
+                        TextField("Join another org", text: $joinCodeInput)
+                        Button("Join") {
+                            joinOrg()
+                        }
+                    }
+                }
+                Section(header: Text("Account")) {
+                    Button("Sign Out", role: .destructive) {
+                        signedInUserID = ""
+                        orgs.forEach { context.delete($0) }
+                        dismiss()
+                    }
+                }
+                if let message { Text(message).font(.caption).foregroundStyle(.secondary) }
+            }
+            .navigationTitle("Settings")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Done") { dismiss() }
+                }
+            }
+        }
+    }
+
+    private func joinOrg() {
+        let codeTrim = joinCodeInput.uppercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        if let found = orgs.first(where: { $0.joinCode.uppercased() == codeTrim }) {
+            message = "Already in \(found.name)."
+        } else {
+            message = "Join flow not fully implemented yet (CloudKit will handle)."
+        }
+        joinCodeInput = ""
+    }
+}
+
+// MARK: - Project detail placeholder
 
 struct ProjectDetailPlaceholder: View {
     var project: Item
@@ -243,7 +302,7 @@ struct ProjectDetailPlaceholder: View {
     }
 }
 
-// MARK: - Branding
+// MARK: - Logo
 
 struct LogoView: View {
     var body: some View {
@@ -270,24 +329,15 @@ struct LogoView: View {
     ContentView()
         .modelContainer(for: [Item.self, Org.self], inMemory: true)
 }
-
-@MainActor
-private func previewSeededContainer() -> ModelContainer {
-    let cfg = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Item.self, Org.self, configurations: cfg)
-    let ctx = container.mainContext
-    ctx.insert(Org(name: "Dox Electronics", slug: "dox-electronics", joinCode: "DX42K9"))
-    ctx.insert(Item(name: "Smith Residence"))
-    ctx.insert(Item(name: "Beach House"))
-    return container
+#Preview("Org Onboarding") {
+    OrgOnboardingView()
+        .modelContainer(for: [Item.self, Org.self], inMemory: true)
 }
-
-#Preview("Projects (Seeded)") {
-    NavigationStack { ProjectsHomeView() }
-        .modelContainer(previewSeededContainer())
+#Preview("Projects – Empty") {
+    ProjectsHomeView()
+        .modelContainer(for: [Item.self, Org.self], inMemory: true)
 }
-
-#Preview("Org Onboarding (Seeded)") {
-    NavigationStack { OrgOnboardingView() }
-        .modelContainer(previewSeededContainer())
+#Preview("Settings") {
+    SettingsView()
+        .modelContainer(for: [Item.self, Org.self], inMemory: true)
 }
