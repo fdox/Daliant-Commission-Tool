@@ -21,14 +21,7 @@ struct ContentView: View {
     }
 }
 
-#Preview("App Flow (seeded)") {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Org.self, Item.self, configurations: config)
-    let ctx = ModelContext(container)
-    // Seed an org and a couple of projects for preview
-    ctx.insert(Org(name: "Daliant Lighting"))
-    ctx.insert(Item(title: "Smith Residence"))
-    ctx.insert(Item(title: "Beach House"))
+#Preview {
     ContentView()
-        .modelContainer(container)
+        .modelContainer(for: [Org.self, Item.self], inMemory: true)
 }

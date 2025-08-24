@@ -66,10 +66,8 @@ struct SettingsView: View {
 }
 
 #Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Org.self, configurations: config)
-    let ctx = ModelContext(container)
-    ctx.insert(Org(name: "Daliant Lighting"))
     NavigationStack { SettingsView() }
+        .modelContainer(for: [Org.self], inMemory: true)
+}
         .modelContainer(container)
 }

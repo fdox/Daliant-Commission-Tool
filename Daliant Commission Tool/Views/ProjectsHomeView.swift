@@ -51,11 +51,8 @@ struct ProjectsHomeView: View {
 }
 
 #Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Item.self, configurations: config)
-    let ctx = ModelContext(container)
-    ctx.insert(Item(title: "Sample A"))
-    ctx.insert(Item(title: "Sample B"))
     NavigationStack { ProjectsHomeView() }
+        .modelContainer(for: [Item.self], inMemory: true)
+}
         .modelContainer(container)
 }
