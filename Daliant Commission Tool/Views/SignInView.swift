@@ -9,17 +9,15 @@ struct SignInView: View {
                 .font(.system(size: 56))
             Text("Daliant Commission Tool")
                 .font(.title.bold())
-            Text("Sign in placeholder — taps 'Continue' to proceed.")
+            Text("Sign in placeholder — tap Continue to proceed.")
                 .foregroundStyle(.secondary)
-            Button(action: { onSignedIn(UUID().uuidString, "Tester") }) {
-                Text("Continue")
-                    .frame(maxWidth: .infinity)
+            Button("Continue") {
+                onSignedIn(UUID().uuidString, "Tester")
             }
             .buttonStyle(.borderedProminent)
+            .frame(maxWidth: .infinity)
             .padding(.horizontal)
         }
         .padding()
     }
-
-
-#Preview { SignInView { _,_ in } }
+}
