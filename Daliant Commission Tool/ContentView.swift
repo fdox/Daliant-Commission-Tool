@@ -268,7 +268,7 @@ struct LogoView: View {
 
 #Preview("Auth – Signed Out") {
     ContentView()
-        .modelContainer(for: Item.self, Org.self, inMemory: true)
+        .modelContainer(for: [Item.self, Org.self], inMemory: true)
 }
 
 @MainActor
