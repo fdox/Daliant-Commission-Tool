@@ -19,10 +19,10 @@ struct ContentView: View {
             }
         }
     }
-}
 
 
-}
+
+
 
 #Preview("Seeded App Flow") {
     ContentView()
@@ -33,4 +33,4 @@ struct ContentView: View {
                 ctx.insert(Item(title: "Beach House"))
             }
         )
-}
+

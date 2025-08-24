@@ -54,13 +54,13 @@ struct SettingsView: View {
             Text("This removes your org from this device’s data store.")
         }
     }
-}
+
 
     .modelContainer(for: [Org.self], inMemory: true) { container in
         let ctx = ModelContext(container)
         ctx.insert(Org(name: "Daliant Lighting"))
     }
-}
+
 
 #Preview("Seeded Settings") {
     NavigationStack { SettingsView() }
@@ -69,4 +69,4 @@ struct SettingsView: View {
                 ctx.insert(Org(name: "Daliant Lighting"))
             }
         )
-}
+

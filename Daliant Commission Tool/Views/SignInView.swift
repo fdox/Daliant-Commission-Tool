@@ -20,6 +20,6 @@ struct SignInView: View {
         }
         .padding()
     }
-}
+
 
 #Preview { SignInView { _,_ in } }

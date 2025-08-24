@@ -46,7 +46,7 @@ struct ProjectsHomeView: View {
             NavigationStack { SettingsView() }
         }
     }
-}
+
 
     .modelContainer(for: [Item.self], inMemory: true) { container in
         let ctx = ModelContext(container)
@@ -54,7 +54,7 @@ struct ProjectsHomeView: View {
         ctx.insert(Item(title: "Beach House"))
         ctx.insert(Item(title: "Penthouse Commissioning"))
     }
-}
+
 
 #Preview("Seeded ProjectsHome") {
     NavigationStack { ProjectsHomeView() }
@@ -65,4 +65,4 @@ struct ProjectsHomeView: View {
                 ctx.insert(Item(title: "Penthouse Commissioning"))
             }
         )
-}
+

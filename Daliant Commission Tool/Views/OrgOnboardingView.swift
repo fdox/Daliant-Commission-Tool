@@ -20,11 +20,11 @@ struct OrgOnboardingView: View {
         }
         .navigationTitle("Welcome")
     }
-}
+
 
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: Org.self, configurations: config)
     NavigationStack { OrgOnboardingView() }
         .modelContainer(container)
-}
+
