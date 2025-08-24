@@ -16,6 +16,7 @@
 		9E505B9C2E5ACB4000B1BFE2 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E505B8A2E5ACB4000B1BFE2 /* Item.swift */; };
 		9E505B9D2E5ACB4000B1BFE2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E505B932E5ACB4000B1BFE2 /* Assets.xcassets */; };
 		9E505BA12E5ACF8400B1BFE2 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E505BA02E5ACF8400B1BFE2 /* SettingsView.swift */; };
+		9E505BA32E5AD91900B1BFE2 /* PreviewSeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E505BA22E5AD91900B1BFE2 /* PreviewSeed.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		9E505B932E5ACB4000B1BFE2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9E505B942E5ACB4000B1BFE2 /* Daliant_Commission_ToolApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Daliant_Commission_ToolApp.swift; sourceTree = "<group>"; };
 		9E505BA02E5ACF8400B1BFE2 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		9E505BA22E5AD91900B1BFE2 /* PreviewSeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewSeed.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 		9E505B922E5ACB4000B1BFE2 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				9E505BA22E5AD91900B1BFE2 /* PreviewSeed.swift */,
 				9E505B8E2E5ACB4000B1BFE2 /* ContentView.swift */,
 				9E505B8F2E5ACB4000B1BFE2 /* OrgOnboardingView.swift */,
 				9E505B902E5ACB4000B1BFE2 /* ProjectsHomeView.swift */,
@@ -277,6 +280,7 @@
 				9E505B9A2E5ACB4000B1BFE2 /* ProjectsHomeView.swift in Sources */,
 				9E505B9B2E5ACB4000B1BFE2 /* SignInView.swift in Sources */,
 				9E505B9C2E5ACB4000B1BFE2 /* Item.swift in Sources */,
+				9E505BA32E5AD91900B1BFE2 /* PreviewSeed.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
