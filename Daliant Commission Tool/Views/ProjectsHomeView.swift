@@ -46,23 +46,19 @@ struct ProjectsHomeView: View {
             NavigationStack { SettingsView() }
         }
     }
+}
 
-
-    .modelContainer(for: [Item.self], inMemory: true) { container in
-        let ctx = ModelContext(container)
-        ctx.insert(Item(title: "Smith Residence"))
-        ctx.insert(Item(title: "Beach House"))
-        ctx.insert(Item(title: "Penthouse Commissioning"))
-    }
-
-
+// MARK: - Preview (safe, seeded)
 #Preview("Seeded ProjectsHome") {
     NavigationStack { ProjectsHomeView() }
-        .modelContainer(
-            PreviewSeed.container([Item.self]) { ctx in
-                ctx.insert(Item(title: "Smith Residence"))
-                ctx.insert(Item(title: "Beach House"))
-                ctx.insert(Item(title: "Penthouse Commissioning"))
-            }
-        )
-
+        .modelContainer({
+            let schema = Schema([Item.self])
+            let cfg = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+            let container = try! ModelContainer(for: schema, configurations: [cfg])
+            let ctx = ModelContext(container)
+            ctx.insert(Item(title: "Smith Residence"))
+            ctx.insert(Item(title: "Beach House"))
+            ctx.insert(Item(title: "Penthouse Commissioning"))
+            return container
+        }())
+}
