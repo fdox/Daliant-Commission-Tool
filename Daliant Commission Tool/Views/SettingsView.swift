@@ -54,19 +54,17 @@ struct SettingsView: View {
             Text("This removes your org from this device’s data store.")
         }
     }
+}
 
-
-    .modelContainer(for: [Org.self], inMemory: true) { container in
-        let ctx = ModelContext(container)
-        ctx.insert(Org(name: "Daliant Lighting"))
-    }
-
-
+// MARK: - Preview (safe, seeded)
 #Preview("Seeded Settings") {
     NavigationStack { SettingsView() }
-        .modelContainer(
-            PreviewSeed.container([Org.self]) { ctx in
-                ctx.insert(Org(name: "Daliant Lighting"))
-            }
-        )
-
+        .modelContainer({
+            let schema = Schema([Org.self])
+            let cfg = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+            let container = try! ModelContainer(for: schema, configurations: [cfg])
+            let ctx = ModelContext(container)
+            ctx.insert(Org(name: "Daliant Lighting"))
+            return container
+        }())
+}
