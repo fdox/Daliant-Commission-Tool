@@ -1,12 +1,3 @@
-//  ProjectsHomeView.swift
-//  Daliant Commission Tool
-//
-//  Phase 3 – Step 1 update:
-//  - Uses Item.name (not Item.title)
-//  - Adds simple search
-//  - Gear button opens SettingsView
-//  - Canvas-friendly preview with in-memory SwiftData
-
 import SwiftUI
 import SwiftData
 
@@ -14,7 +5,6 @@ struct ProjectsHomeView: View {
     @Environment(\.modelContext) private var context
     @State private var showingSettings = false
     @State private var query: String = ""
-
     @Query private var projects: [Item]
 
     var body: some View {
@@ -22,21 +12,24 @@ struct ProjectsHomeView: View {
             Group {
                 let filtered = filteredProjects()
                 if filtered.isEmpty {
-                    ContentUnavailableView("No Projects",
-                                           systemImage: "folder",
-                                           description: Text("Tap + (coming soon) or use the wizard to create your first project."))
-                        .padding()
+                    ContentUnavailableView(
+                        "No Projects",
+                        systemImage: "folder",
+                        description: Text("Tap + (coming soon) or use the wizard to create your first project.")
+                    )
+                    .padding()
                 } else {
                     List {
                         ForEach(filtered) { p in
                             NavigationLink {
-                                // Replace this stub with your Project Detail screen when ready.
                                 Text("Project Detail (coming soon)")
                                     .navigationTitle(projectName(p))
                             } label: {
-                                ProjectCardRow(name: projectName(p),
-                                               controlSystemTag: projectControlSystemTag(p),
-                                               contact: projectContact(p))
+                                ProjectCardRow(
+                                    name: projectName(p),
+                                    controlSystemTag: projectControlSystemTag(p),
+                                    contact: projectContact(p)
+                                )
                             }
                             .listRowSeparator(.hidden)
                             .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
@@ -49,9 +42,7 @@ struct ProjectsHomeView: View {
             .navigationTitle("Projects")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        showingSettings = true
-                    } label: {
+                    Button { showingSettings = true } label: {
                         Image(systemName: "gearshape")
                     }
                     .accessibilityLabel("Settings")
@@ -68,41 +59,33 @@ struct ProjectsHomeView: View {
         let base = projects.sorted {
             projectName($0).localizedStandardCompare(projectName($1)) == .orderedAscending
         }
-        guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return base }
-        return base.filter { projectName($0).localizedCaseInsensitiveContains(query) }
+        let q = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !q.isEmpty else { return base }
+        return base.filter { projectName($0).localizedCaseInsensitiveContains(q) }
     }
 
-    // MARK: - Safe accessors (avoid compile breaks if model fields change)
-
+    // MARK: - Safe accessors
     private func projectName(_ item: Item) -> String {
-        if let n = Mirror(reflecting: item).children.first(where: { $0.label == "name" })?.value as? String, !n.isEmpty {
-            return n
-        }
-        if let t = Mirror(reflecting: item).children.first(where: { $0.label == "title" })?.value as? String, !t.isEmpty {
-            return t
-        }
+        if let n = Mirror(reflecting: item).children.first(where: { $0.label == "name" })?.value as? String, !n.isEmpty { return n }
+        if let t = Mirror(reflecting: item).children.first(where: { $0.label == "title" })?.value as? String, !t.isEmpty { return t }
         return "Untitled"
     }
-
     private func projectControlSystemTag(_ item: Item) -> String? {
         if let raw = Mirror(reflecting: item).children.first(where: { $0.label == "controlSystemRaw" })?.value as? String, !raw.isEmpty {
             return prettyControlSystem(raw)
         }
         if let enumVal = Mirror(reflecting: item).children.first(where: { $0.label == "controlSystem" })?.value {
-            let s = String(describing: enumVal)
-            return prettyControlSystem(s)
+            return prettyControlSystem(String(describing: enumVal))
         }
         return nil
     }
-
     private func projectContact(_ item: Item) -> String? {
-        let mirror = Mirror(reflecting: item)
-        let first = mirror.children.first(where: { $0.label == "contactFirstName" })?.value as? String
-        let last  = mirror.children.first(where: { $0.label == "contactLastName" })?.value as? String
-        let full = [first, last].compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }.filter { !$0.isEmpty }.joined(separator: " ")
+        let m = Mirror(reflecting: item)
+        let f = m.children.first(where: { $0.label == "contactFirstName" })?.value as? String
+        let l = m.children.first(where: { $0.label == "contactLastName" })?.value as? String
+        let full = [f, l].compactMap { $0?.trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty }.joined(separator: " ")
         return full.isEmpty ? nil : full
     }
-
     private func prettyControlSystem(_ raw: String) -> String {
         let s = raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         switch s {
@@ -121,9 +104,7 @@ private struct ProjectCardRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(name)
-                .font(.headline)
-                .lineLimit(1)
+            Text(name).font(.headline).lineLimit(1)
             HStack(spacing: 8) {
                 if let tag = controlSystemTag {
                     Text(tag)
@@ -133,10 +114,7 @@ private struct ProjectCardRow: View {
                         .accessibilityLabel("Control system \(tag)")
                 }
                 if let contact {
-                    Text(contact)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
+                    Text(contact).font(.subheadline).foregroundStyle(.secondary).lineLimit(1)
                 }
             }
         }
@@ -148,24 +126,26 @@ private struct ProjectCardRow: View {
     }
 }
 
-#Preview("Projects – Seeded") {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Org.self, Item.self, configurations: config)
-    let context = container.mainContext
+// MARK: - Preview helper: do seeding OUTSIDE the #Preview result builder
+fileprivate enum PreviewFactory {
+    static func projectsHome() -> some View {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try! ModelContainer(for: Org.self, Item.self, configurations: config)
+        let context = container.mainContext
 
-    do {
-        let org = Org(name: "Dox Electronics", joinCode: "DOX123")
+        let org = Org(name: "Dox Electronics") // (no joinCode init in your model)
         context.insert(org)
 
         let p1 = Item(name: "Smith Residence")
         let p2 = Item(name: "Beach House")
         context.insert(p1)
         context.insert(p2)
-        try context.save()
-    } catch {
-        assertionFailure("Preview seeding failed: \(error)")
-    }
+        _ = try? context.save()
 
-    return ProjectsHomeView()
-        .modelContainer(container)
+        return ProjectsHomeView().modelContainer(container)
+    }
+}
+
+#Preview("Projects — Seeded") {
+    PreviewFactory.projectsHome()
 }

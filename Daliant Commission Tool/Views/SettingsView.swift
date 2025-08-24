@@ -1,24 +1,13 @@
-//  SettingsView.swift
-//  Daliant Commission Tool
-//
-//  Phase 3 – Step 1 update:
-//  - Shows current Org name + join code
-//  - "Join different org" by code (local behavior)
-//  - "Sign out" deletes all Org records
-//  - Canvas #Preview with in-memory SwiftData
-
 import SwiftUI
 import SwiftData
 
 struct SettingsView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
-
     @Query private var orgs: [Org]
 
     @State private var newJoinCode: String = ""
     @State private var errorMessage: String?
-
     var currentOrg: Org? { orgs.first }
 
     var body: some View {
@@ -27,8 +16,7 @@ struct SettingsView: View {
                 HStack {
                     Text("Name").foregroundStyle(.secondary)
                     Spacer()
-                    Text(currentOrgName())
-                        .fontWeight(.semibold)
+                    Text(currentOrgName()).fontWeight(.semibold)
                 }
                 HStack {
                     Text("Join code").foregroundStyle(.secondary)
@@ -39,75 +27,66 @@ struct SettingsView: View {
                         .lineLimit(1)
                 }
             }
-
             Section("Join different org") {
                 TextField("Enter join code", text: $newJoinCode)
                     .textInputAutocapitalization(.characters)
                     .autocorrectionDisabled()
-                Button("Join") {
-                    joinDifferentOrg()
-                }
-                .disabled(newJoinCode.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                Button("Join") { joinDifferentOrg() }
+                    .disabled(newJoinCode.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
-
             Section {
-                Button(role: .destructive) {
-                    signOut()
-                } label: {
-                    Text("Sign out")
-                }
+                Button(role: .destructive) { signOut() } label: { Text("Sign out") }
             }
         }
         .navigationTitle("Settings")
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button("Done") { dismiss() }
-            }
-        }
+        .toolbar { ToolbarItem(placement: .topBarTrailing) { Button("Done") { dismiss() } } }
         .alert("Error", isPresented: .constant(errorMessage != nil), actions: {
             Button("OK", role: .cancel) { errorMessage = nil }
-        }, message: {
-            Text(errorMessage ?? "")
-        })
+        }, message: { Text(errorMessage ?? "") })
     }
 
-    // MARK: - Helpers
-
+    // MARK: Helpers
     private func currentOrgName() -> String {
         guard let org = currentOrg else { return "—" }
-        if let n = Mirror(reflecting: org).children.first(where: { $0.label == "name" })?.value as? String, !n.isEmpty {
-            return n
-        }
+        if let n = Mirror(reflecting: org).children.first(where: { $0.label == "name" })?.value as? String, !n.isEmpty { return n }
         return "—"
     }
-
     private func currentOrgJoinCode() -> String {
         guard let org = currentOrg else { return "—" }
-        if let c = Mirror(reflecting: org).children.first(where: { $0.label == "joinCode" })?.value as? String, !c.isEmpty {
-            return c
-        }
+        let m = Mirror(reflecting: org)
+        if let c = m.children.first(where: { $0.label == "joinCode" })?.value as? String, !c.isEmpty { return c }
+        if let c = m.children.first(where: { $0.label == "code" })?.value as? String, !c.isEmpty { return c }
+        if let name = m.children.first(where: { $0.label == "name" })?.value as? String,
+           let parsed = parseCodeFromName(name) { return parsed }
         return "—"
     }
-
+    private func parseCodeFromName(_ name: String) -> String? {
+        guard let open = name.lastIndex(of: "("),
+              let close = name.lastIndex(of: ")"),
+              close > open else { return nil }
+        let code = name[name.index(after: open)..<close].trimmingCharacters(in: .whitespaces)
+        return code.isEmpty ? nil : code
+    }
     private func joinDifferentOrg() {
         let code = newJoinCode.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !code.isEmpty else { return }
-
         do {
-            let fetch = FetchDescriptor<Org>()
-            let all = try context.fetch(fetch)
+            let all = try context.fetch(FetchDescriptor<Org>())
             if let found = all.first(where: {
-                (Mirror(reflecting: $0).children.first(where: { $0.label == "joinCode" })?.value as? String)?
-                    .caseInsensitiveCompare(code) == .orderedSame
+                let m = Mirror(reflecting: $0)
+                let c1 = (m.children.first(where: { $0.label == "joinCode" })?.value as? String)
+                let c2 = (m.children.first(where: { $0.label == "code" })?.value as? String)
+                let name = (m.children.first(where: { $0.label == "name" })?.value as? String) ?? ""
+                return c1?.caseInsensitiveCompare(code) == .orderedSame
+                    || c2?.caseInsensitiveCompare(code) == .orderedSame
+                    || name.localizedCaseInsensitiveContains("(\(code))")
             }) {
                 for o in all where o != found { context.delete(o) }
                 try context.save()
-                newJoinCode = ""
-                return
+                newJoinCode = ""; return
             }
-
             for o in all { context.delete(o) }
-            let newOrg = Org(name: "Org (\(code))", joinCode: code)
+            let newOrg = Org(name: "Org (\(code))") // fallback: encode code into name
             context.insert(newOrg)
             try context.save()
             newJoinCode = ""
@@ -115,13 +94,9 @@ struct SettingsView: View {
             errorMessage = "Could not switch org: \(error.localizedDescription)"
         }
     }
-
     private func signOut() {
         do {
-            let fetch = FetchDescriptor<Org>()
-            for o in try context.fetch(fetch) {
-                context.delete(o)
-            }
+            for o in try context.fetch(FetchDescriptor<Org>()) { context.delete(o) }
             try context.save()
             dismiss()
         } catch {
@@ -130,21 +105,19 @@ struct SettingsView: View {
     }
 }
 
-#Preview("Settings – Seeded") {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Org.self, Item.self, configurations: config)
-    let context = container.mainContext
-
-    do {
-        let org = Org(name: "Dox Electronics", joinCode: "DOX123")
+// Preview helper (single expression in #Preview)
+fileprivate enum SettingsPreviewFactory {
+    static func seeded() -> some View {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try! ModelContainer(for: Org.self, Item.self, configurations: config)
+        let context = container.mainContext
+        let org = Org(name: "Dox Electronics") // (no joinCode init in your model)
         context.insert(org)
-        try context.save()
-    } catch {
-        assertionFailure("Preview seed failed: \(error)")
+        _ = try? context.save()
+        return NavigationStack { SettingsView() }.modelContainer(container)
     }
+}
 
-    return NavigationStack {
-        SettingsView()
-    }
-    .modelContainer(container)
+#Preview("Settings — Seeded") {
+    SettingsPreviewFactory.seeded()
 }
