@@ -268,13 +268,13 @@ struct LogoView: View {
 
 #Preview("Auth – Signed Out") {
     ContentView()
-        .modelContainer(for: [Item.self, Org.self], inMemory: true)
+        .modelContainer(for: Item.self, Org.self, inMemory: true)
 }
 
 @MainActor
 private func previewSeededContainer() -> ModelContainer {
     let cfg = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: [Item.self, Org.self], configurations: cfg)
+    let container = try! ModelContainer(for: Item.self, Org.self, configurations: cfg)
     let ctx = container.mainContext
     ctx.insert(Org(name: "Dox Electronics", slug: "dox-electronics", joinCode: "DX42K9"))
     ctx.insert(Item(name: "Smith Residence"))
