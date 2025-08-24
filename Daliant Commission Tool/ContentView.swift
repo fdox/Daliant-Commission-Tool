@@ -7,7 +7,7 @@ import UIKit
 
 struct ContentView: View {
     @Environment(\.modelContext) private var context
-    @Query(sort: \Org.createdAt) private var orgs: [Org]
+    @Query(of: Org.self, sort: .createdAt) private var orgs: [Org]
 
     @AppStorage("signedInUserID") private var signedInUserID: String = ""
 
@@ -75,7 +75,7 @@ struct SignInView: View {
 
 struct OrgOnboardingView: View {
     @Environment(\.modelContext) private var context
-    @Query(sort: \Org.createdAt) private var orgs: [Org]
+    @Query(of: Org.self, sort: .createdAt) private var orgs: [Org]
 
     @State private var orgName: String = ""
     @State private var joinCodeInput: String = ""
@@ -171,8 +171,8 @@ struct OrgOnboardingView: View {
 
 struct ProjectsHomeView: View {
     @Environment(\.modelContext) private var context
-    @Query(sort: \Item.createdAt, order: .reverse) private var projects: [Item]
-    @Query(sort: \Org.createdAt) private var orgs: [Org]
+    @Query(of: Item.self, sort: .createdAt, order: .reverse) private var projects: [Item]
+    @Query(of: Org.self, sort: .createdAt) private var orgs: [Org]
     @AppStorage("signedInUserID") private var signedInUserID: String = ""
     @State private var newName: String = ""
     @State private var showSettings = false
@@ -239,7 +239,7 @@ struct ProjectsHomeView: View {
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
-    @Query(sort: \Org.createdAt) private var orgs: [Org]
+    @Query(of: Org.self, sort: .createdAt) private var orgs: [Org]
     @AppStorage("signedInUserID") private var signedInUserID: String = ""
     @State private var joinCodeInput: String = ""
     @State private var message: String?
