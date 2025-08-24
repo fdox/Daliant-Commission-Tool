@@ -21,3 +21,17 @@ struct SignInView: View {
         .padding()
     }
 }
+
+#if DEBUG
+import SwiftData
+
+#Preview("Sign In – Basic") {
+    // If SignInView needs a model container, uncomment below:
+    /*
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Org.self, Item.self, configurations: config)
+    return SignInView().modelContainer(container)
+    */
+    return SignInView()
+}
+#endif
