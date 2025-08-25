@@ -3,20 +3,19 @@ import SwiftData
 
 @main
 struct Daliant_Commission_ToolApp: App {
+    // If you build the container here:
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .modelContainer(sharedContainer)
         }
-        .modelContainer(sharedModelContainer)
     }
 }
 
-// MARK: - SwiftData Container
-let sharedModelContainer: ModelContainer = {
-    let schema = Schema([
-        Org.self,
-        Item.self
-    ])
-    let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-    return try! ModelContainer(for: schema, configurations: [config])
+@MainActor
+let sharedContainer: ModelContainer = {
+    // IMPORTANT: include Fixture.self in the schema
+    let schema = Schema([Org.self, Item.self, Fixture.self])
+    let config = ModelConfiguration() // adjust if you have custom options
+    return try! ModelContainer(for: schema, configurations: config)
 }()

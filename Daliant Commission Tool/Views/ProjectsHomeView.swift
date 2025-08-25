@@ -5,84 +5,155 @@ struct ProjectsHomeView: View {
     @Environment(\.modelContext) private var context
     @State private var showingSettings = false
     @State private var query: String = ""
+    @State private var showingWizard = false
     @Query private var projects: [Item]
 
     var body: some View {
         NavigationStack {
-            Group {
-                let filtered = filteredProjects()
-                if filtered.isEmpty {
-                    ContentUnavailableView(
-                        "No Projects",
-                        systemImage: "folder",
-                        description: Text("Tap + (coming soon) or use the wizard to create your first project.")
-                    )
-                    .padding()
-                } else {
-                    List {
-                        ForEach(filtered) { p in
-                            NavigationLink {
-                                Text("Project Detail (coming soon)")
-                                    .navigationTitle(projectName(p))
-                            } label: {
-                                ProjectCardRow(
-                                    name: projectName(p),
-                                    controlSystemTag: projectControlSystemTag(p),
-                                    contact: projectContact(p)
-                                )
-                            }
-                            .listRowSeparator(.hidden)
-                            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                            .background(Color.clear)
+            content(for: filteredProjects())
+                .navigationTitle("Projects")
+                .toolbar {
+                    // + button
+                    ToolbarItem(placement: .primaryAction) {
+                        Button {
+                            showingWizard = true
+                        } label: {
+                            Label("New Project", systemImage: "plus")
                         }
                     }
-                    .listStyle(.plain)
-                }
-            }
-            .navigationTitle("Projects")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button { showingSettings = true } label: { Image(systemName: "gearshape") }
+                    // gear button
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button { showingSettings = true } label: {
+                            Image(systemName: "gearshape")
+                        }
                         .accessibilityLabel("Settings")
+                    }
                 }
-            }
-            .sheet(isPresented: $showingSettings) {
-                NavigationStack { SettingsView() }
-            }
+                // Settings sheet
+                .sheet(isPresented: $showingSettings) {
+                    NavigationStack { SettingsView() }
+                }
+                // Wizard sheet
+                .sheet(isPresented: $showingWizard) {
+                    ProjectWizardView { title, first, last, address, csIndex in
+                        let t = title.trimmingCharacters(in: .whitespacesAndNewlines)
+                        guard !t.isEmpty else { return }
+
+                        // Use the initializer your Item actually has
+                        let newProject = Item(title: t)     // if your model uses name:, switch to Item(name: t)
+
+                        // Save Step 2b fields (safe trims)
+                        let f = first.trimmingCharacters(in: .whitespacesAndNewlines)
+                        let l = last.trimmingCharacters(in: .whitespacesAndNewlines)
+                        let a = address.trimmingCharacters(in: .whitespacesAndNewlines)
+                        newProject.contactFirstName = f.isEmpty ? nil : f
+                        newProject.contactLastName  = l.isEmpty ? nil : l
+                        newProject.siteAddress      = a.isEmpty ? nil : a
+                        let options = ["control4", "crestron", "lutron"]
+                        newProject.controlSystemRaw = (0..<options.count).contains(csIndex) ? options[csIndex] : options[0]
+                        newProject.createdAt = Date()
+
+                        withAnimation {
+                            context.insert(newProject)
+                            try? context.save()
+                            query = ""  // clear search so the row is visible
+                        }
+                    }
+                    .environment(\.modelContext, context) // same model context as the list
+                }
         }
         .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always))
     }
 
+
+    @ViewBuilder
+    private func content(for items: [Item]) -> some View {
+        if items.isEmpty {
+            ContentUnavailableView(
+                "No Projects",
+                systemImage: "folder",
+                description: Text("Tap + to add your first project.")
+            )
+            .padding()
+        } else {
+            projectsList(items)
+        }
+    }
+
+    private func projectsList(_ items: [Item]) -> some View {
+        List {
+            ForEach(items, id: \.persistentModelID) { p in
+                NavigationLink {
+                    ProjectDetailView(project: p)
+                } label: {
+                    ProjectCardRow(
+                        name: p.title,                                      // direct property (fast type-check)
+                        controlSystemTag: projectControlSystemTag(p),
+                        contact: projectContact(p),
+                        created: p.createdAt
+                    )
+                }
+                .listRowSeparator(.hidden)
+                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                .background(Color.clear)
+            }
+        }
+        .listStyle(.plain)
+    }
+    
     private func filteredProjects() -> [Item] {
         let base = projects.sorted {
-            projectName($0).localizedStandardCompare(projectName($1)) == .orderedAscending
+            $0.title.localizedStandardCompare($1.title) == .orderedAscending
         }
         let q = query.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !q.isEmpty else { return base }
-        return base.filter { projectName($0).localizedCaseInsensitiveContains(q) }
+        return base.filter { $0.title.localizedCaseInsensitiveContains(q) }
     }
 
     // MARK: - Safe accessors
-    private func projectName(_ item: Item) -> String {
-        if let n = Mirror(reflecting: item).children.first(where: { $0.label == "name" })?.value as? String, !n.isEmpty { return n }
-        if let t = Mirror(reflecting: item).children.first(where: { $0.label == "title" })?.value as? String, !t.isEmpty { return t }
-        return "Untitled"
+    // MARK: - Reflection helpers that handle Optional values
+
+    /// Unwraps Optional<T> to T using reflection; returns the original value if not optional.
+    private func unwrapOptional(_ any: Any) -> Any? {
+        let m = Mirror(reflecting: any)
+        guard m.displayStyle == .optional else { return any }
+        return m.children.first?.value
     }
-    private func projectControlSystemTag(_ item: Item) -> String? {
-        if let raw = Mirror(reflecting: item).children.first(where: { $0.label == "controlSystemRaw" })?.value as? String, !raw.isEmpty {
-            return prettyControlSystem(raw)
-        }
-        if let enumVal = Mirror(reflecting: item).children.first(where: { $0.label == "controlSystem" })?.value {
-            return prettyControlSystem(String(describing: enumVal))
-        }
+
+    /// Extracts a non-empty String from `any`, handling `String` or `Optional<String>`.
+    private func stringValue(_ any: Any?) -> String? {
+        guard let any = any else { return nil }
+        if let s = any as? String { return s.isEmpty ? nil : s }
+        if let unwrapped = unwrapOptional(any) as? String { return unwrapped.isEmpty ? nil : unwrapped }
         return nil
     }
+
+    /// Reads a (possibly Optional) String property by name from a model instance.
+    private func getString(_ model: Any, key: String) -> String? {
+        let mirror = Mirror(reflecting: model)
+        guard let val = mirror.children.first(where: { $0.label == key })?.value else { return nil }
+        return stringValue(val)
+    }
+
+    // MARK: - Project field accessors (now robust to optionals)
+    
+
+    private func projectControlSystemTag(_ item: Item) -> String? {
+        guard let raw = item.controlSystemRaw?.lowercased() else { return nil }
+        switch raw {
+        case "control4": return "Control4"
+        case "crestron": return "Crestron"
+        case "lutron":   return "Lutron"
+        default:         return nil
+        }
+    }
+    
+
     private func projectContact(_ item: Item) -> String? {
-        let m = Mirror(reflecting: item)
-        let f = m.children.first(where: { $0.label == "contactFirstName" })?.value as? String
-        let l = m.children.first(where: { $0.label == "contactLastName" })?.value as? String
-        let full = [f, l].compactMap { $0?.trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty }.joined(separator: " ")
-        return full.isEmpty ? nil : full
+        let first = getString(item, key: "contactFirstName")?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let last  = getString(item, key: "contactLastName")?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let parts = [first, last].compactMap { $0 }.filter { !$0.isEmpty }
+        return parts.isEmpty ? nil : parts.joined(separator: " ")
     }
     private func prettyControlSystem(_ raw: String) -> String {
         let s = raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
@@ -99,20 +170,36 @@ private struct ProjectCardRow: View {
     let name: String
     let controlSystemTag: String?
     let contact: String?
+    let created: Date?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(name).font(.headline).lineLimit(1)
+            Text(name)
+                .font(.headline)
+                .lineLimit(1)
+
             HStack(spacing: 8) {
                 if let tag = controlSystemTag {
                     Text(tag)
                         .font(.caption)
-                        .padding(.horizontal, 8).padding(.vertical, 4)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
                         .background(.thinMaterial, in: Capsule())
                         .accessibilityLabel("Control system \(tag)")
                 }
-                if let contact {
-                    Text(contact).font(.subheadline).foregroundStyle(.secondary).lineLimit(1)
+
+                if let contact, !contact.isEmpty {
+                    Text(contact)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+
+                if let created {
+                    Text(created, format: .dateTime.month(.abbreviated).day().year())
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
                 }
             }
         }
@@ -124,54 +211,55 @@ private struct ProjectCardRow: View {
     }
 }
 
-// MARK: - Preview helper (seed OUTSIDE the #Preview)
-fileprivate enum PreviewFactory {
-    @MainActor
-    static func projectsHome() -> some View {
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try! ModelContainer(for: Org.self, Item.self, configurations: config)
-        let context = container.mainContext
-
-        let org = Org(name: "Dox Electronics")
-        context.insert(org)
-
-        // Your Item model currently uses 'title:'
-        let p1 = Item(title: "Smith Residence")
-        let p2 = Item(title: "Beach House")
-        context.insert(p1)
-        context.insert(p2)
-
-        _ = try? context.save()
-        return ProjectsHomeView().modelContainer(container)
+    
+    // MARK: - Preview helper (seed OUTSIDE the #Preview)
+    fileprivate enum PreviewFactory {
+        @MainActor
+        static func projectsHome() -> some View {
+            let config = ModelConfiguration(isStoredInMemoryOnly: true)
+            let container = try! ModelContainer(for: Org.self, Item.self, configurations: config)
+            let context = container.mainContext
+            
+            let org = Org(name: "Dox Electronics")
+            context.insert(org)
+            
+            // Your Item model currently uses 'title:'
+            let p1 = Item(title: "Smith Residence")
+            p1.controlSystemRaw = "lutron"
+            p1.contactFirstName = "Alex"
+            p1.contactLastName  = "Smith"
+            
+            _ = try? context.save()
+            return ProjectsHomeView().modelContainer(container)
+        }
     }
-}
-
+    
 #if DEBUG
-import SwiftData
-
-// Keep logic out of the #Preview body — build the view in a helper.
-private enum ProjectsPreviewFactory {
-    @MainActor
-    static func view() -> some View {
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try! ModelContainer(for: Org.self, Item.self, configurations: config)
-        let context = container.mainContext
-
-        // Seed minimal data for Canvas
-        context.insert(Org(name: "Dox Electronics"))
-
-        // Your Item initializer currently uses `title:` (not `name:`).
-        context.insert(Item(title: "Smith Residence"))
-        context.insert(Item(title: "Beach House"))
-
-        _ = try? context.save()
-        return ProjectsHomeView()
-            .modelContainer(container)
+    
+    // Keep logic out of the #Preview body — build the view in a helper.
+    private enum ProjectsPreviewFactory {
+        @MainActor
+        static func view() -> some View {
+            let config = ModelConfiguration(isStoredInMemoryOnly: true)
+            let container = try! ModelContainer(for: Org.self, Item.self, configurations: config)
+            let context = container.mainContext
+            
+            // Seed minimal data for Canvas
+            context.insert(Org(name: "Dox Electronics"))
+            
+            // Your Item initializer currently uses `title:` (not `name:`).
+            context.insert(Item(title: "Smith Residence"))
+            context.insert(Item(title: "Beach House"))
+            
+            _ = try? context.save()
+            return ProjectsHomeView()
+                .modelContainer(container)
+        }
     }
-}
-
-#Preview("Projects — Seeded") {
-    ProjectsPreviewFactory.view()
-}
+    
+    #Preview("Projects — Seeded") {
+        ProjectsPreviewFactory.view()
+    }
 #endif
+    
 
