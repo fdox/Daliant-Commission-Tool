@@ -19,7 +19,7 @@ struct ProjectDetailView: View {
     var body: some View {
         TabView {
             // 1) Scan
-            ScanTab()
+            ScanTab(project: project)
                 .tabItem { Label("Scan", systemImage: "dot.radiowaves.left.and.right") }
 
             // 2) Fixtures
@@ -396,29 +396,534 @@ private extension String {
 // MARK: - Tabs (placeholders for now)
 
 private struct ScanTab: View {
+    @Environment(\.modelContext) private var ctx
+    @Bindable var project: Item
+
+    @State private var isScanning = false
+    @State private var results: [SimDevice] = []
+    @State private var timer: Timer?
+
+    // 6b — single-device commissioning
+    @State private var pendingDevice: SimDevice?
+
+    // 6c — identify pulse
+    @State private var identifying: Set<String> = []
+    @State private var identifyPhase: Bool = false
+    @State private var identifyTimers: [String: Timer] = [:]
+
+    // 6d — bulk commissioning
+    @State private var showingBulk = false
+    @State private var bulkResultMessage: String?
+
     var body: some View {
-        VStack(spacing: 16) {
-            Text("Commissioning")
-                .font(.title3).bold()
-            Text("Tap Start Scan to look for fixtures.")
-                .foregroundStyle(.secondary)
-
-            Button("Start Scan") {
-                // BLE not wired yet (Step 7)
+        VStack(spacing: 12) {
+            HStack {
+                Label(isScanning ? "Scanning…" : "Idle",
+                      systemImage: isScanning ? "dot.radiowaves.left.and.right" : "pause.circle")
+                Spacer()
+                Text("\(results.count) found").foregroundStyle(.secondary)
             }
-            .buttonStyle(.borderedProminent)
+            .padding(.horizontal)
 
-            Spacer()
+            List {
+                if results.isEmpty {
+                    ContentUnavailableView {
+                        Label(isScanning ? "Scanning…" : "No devices yet", systemImage: "lightbulb")
+                    } description: {
+                        Text(isScanning
+                             ? "Listening for Pod4 fixtures…"
+                             : "Tap Start Scan to simulate nearby fixtures.")
+                    } actions: {
+                        if !isScanning {
+                            Button("Populate Demo Results") { populateDemo() }
+                        }
+                    }
+                } else {
+                    ForEach(results) { dev in
+                        let isIdentifying = identifying.contains(dev.id)
 
-            ContentUnavailableView(
-                "No devices found yet",
-                systemImage: "lightbulb",
-                description: Text("Run a scan to discover fixtures.")
-            )
-            .frame(maxWidth: .infinity, alignment: .top)
+                        HStack(alignment: .firstTextBaseline, spacing: 12) {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(dev.name).font(.headline)
+                                Text(dev.subtitle).font(.caption).foregroundStyle(.secondary)
+                            }
+
+                            Spacer(minLength: 8)
+
+                            HStack(spacing: 8) {
+                                // Identify
+                                Button {
+                                    identify(dev)
+                                } label: {
+                                    Label(isIdentifying ? "Identifying…" : "Identify",
+                                          systemImage: "lightbulb.max")
+                                }
+                                .buttonStyle(.bordered)
+                                .disabled(isIdentifying)
+
+                                // Commission…
+                                Button {
+                                    pendingDevice = dev
+                                } label: {
+                                    Label("Commission…", systemImage: "checkmark.seal")
+                                }
+                                .buttonStyle(.borderedProminent)
+                            }
+                        }
+                        .padding(.vertical, 6)
+                        .padding(.horizontal, 6)
+                        // Pulse while identifying
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(isIdentifying
+                                      ? Color.accentColor.opacity(identifyPhase ? 0.24 : 0.10)
+                                      : Color.clear)
+                        )
+                        .scaleEffect(isIdentifying && identifyPhase ? 1.01 : 1.0)
+                        .animation(.easeInOut(duration: 0.18), value: identifyPhase)
+                    }
+                }
+            }
         }
-        .padding()
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    showingBulk = true
+                } label: {
+                    Label("Bulk…", systemImage: "square.stack.3d.up")
+                }
+                .disabled(results.isEmpty)
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                if isScanning {
+                    Button { stopScan() } label: { Label("Stop", systemImage: "stop.circle") }
+                } else {
+                    Button { startScan() } label: { Label("Start Scan", systemImage: "play.circle") }
+                }
+            }
+        }
+        .onDisappear {
+            stopScan()
+            stopAllIdentifications()
+        }
+        // Single-device commissioning sheet (6b)
+        .sheet(item: $pendingDevice) { dev in
+            CommissionDeviceSheet(
+                project: project,
+                device: dev,
+                onCommissioned: { serial in
+                    results.removeAll { $0.id == serial }
+                }
+            )
+            .environment(\.modelContext, ctx)
+            .presentationDetents([.medium, .large])
+        }
+        // Bulk commissioning sheet (6d)
+        .sheet(isPresented: $showingBulk) {
+            BulkCommissionSheet(
+                project: project,
+                devices: results,
+                onDone: { commissionedSerials, summary in
+                    // Remove commissioned from the list, show summary
+                    let commissioned = Set(commissionedSerials)
+                    results.removeAll { commissioned.contains($0.id) }
+                    bulkResultMessage = summary
+                }
+            )
+            .environment(\.modelContext, ctx)
+            .presentationDetents([.medium, .large])
+        }
+        // Simple summary alert after bulk
+        .alert("Bulk Commission", isPresented: Binding(
+            get: { bulkResultMessage != nil },
+            set: { if !$0 { bulkResultMessage = nil } }
+        )) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(bulkResultMessage ?? "")
+        }
     }
+
+    // MARK: - Scan controls
+
+    private func startScan() {
+        results.removeAll()
+        isScanning = true
+        timer?.invalidate()
+        var steps = 0
+        let t = Timer.scheduledTimer(withTimeInterval: 0.9, repeats: true) { t in
+            steps += 1
+            results.append(SimDevice.random(excluding: Set(results.map { $0.serial })))
+            if steps >= 6 {
+                isScanning = false
+                t.invalidate()
+            }
+        }
+        RunLoop.main.add(t, forMode: .common)
+        timer = t
+    }
+
+    private func stopScan() {
+        isScanning = false
+        timer?.invalidate()
+        timer = nil
+    }
+
+    // MARK: - Identify (6c)
+
+    private func identify(_ dev: SimDevice) {
+        let id = dev.id
+        identifyTimers[id]?.invalidate()
+        identifyTimers[id] = nil
+
+        identifying.insert(id)
+
+        var pulsesRemaining = 8 // ~1.6s @ 0.2s steps
+        let t = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { t in
+            withAnimation(.easeInOut(duration: 0.18)) {
+                identifyPhase.toggle()
+            }
+            pulsesRemaining -= 1
+            if pulsesRemaining <= 0 {
+                t.invalidate()
+                identifying.remove(id)
+                identifyTimers[id] = nil
+                if identifying.isEmpty { identifyPhase = false }
+            }
+        }
+        RunLoop.main.add(t, forMode: .common)
+        identifyTimers[id] = t
+    }
+
+    private func stopAllIdentifications() {
+        identifyTimers.values.forEach { $0.invalidate() }
+        identifyTimers.removeAll()
+        identifying.removeAll()
+        identifyPhase = false
+    }
+
+    // MARK: - Demo
+
+    private func populateDemo() {
+        results = (0..<4).map { _ in SimDevice.random(excluding: Set(results.map { $0.serial })) }
+    }
+
+    // ============================================================
+    // MARK: - NESTED SHEETS
+    // ============================================================
+
+    // Shared helper visible to both nested sheets
+    private static func nextAvailableAddress(in project: Item) -> Int? {
+        let used = Set(project.fixtures.map { $0.shortAddress })
+        for addr in 0...63 where !used.contains(addr) { return addr }
+        return nil
+    }
+    
+    // --- Step 6b: Commission Device sheet (nested) ---
+    private struct CommissionDeviceSheet: View {
+        @Environment(\.dismiss) private var dismiss
+        @Environment(\.modelContext) private var ctx
+
+        @Bindable var project: Item
+        let device: SimDevice
+        var onCommissioned: (String) -> Void
+
+        // Prefill fields
+        @State private var label: String
+        @State private var address: Int
+        @State private var groupsMask: UInt16 = 0
+        @State private var room: String = ""
+        @State private var dtType: String
+
+        init(project: Item, device: SimDevice, onCommissioned: @escaping (String) -> Void) {
+            self._project = Bindable(project)
+            self.device = device
+            self.onCommissioned = onCommissioned
+            // Defaults
+            _label = State(initialValue: device.name)
+            let next = ScanTab.nextAvailableAddress(in: project) ?? 0
+            _address = State(initialValue: next)
+            _dtType = State(initialValue: device.dtTypeRaw)
+        }
+
+        // Validation
+        private var usedAddresses: Set<Int> { Set(project.fixtures.map { $0.shortAddress }) }
+        private var addressInUse: Bool { usedAddresses.contains(address) }
+        private var addressOutOfRange: Bool { !(0...63).contains(address) }
+        private var canSave: Bool {
+            !label.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            && !addressOutOfRange
+            && !addressInUse
+        }
+        private var nextFree: Int? { ScanTab.nextAvailableAddress(in: project) }
+
+        var body: some View {
+            NavigationStack {
+                Form {
+                    Section("Required") {
+                        TextField("Label", text: $label)
+                            .textInputAutocapitalization(.words)
+
+                        Stepper(value: $address, in: 0...63) {
+                            HStack {
+                                Text("Address")
+                                Spacer()
+                                Text("\(address)").monospacedDigit()
+                            }
+                        }
+
+                        if addressOutOfRange {
+                            Text("Address must be between 0 and 63.")
+                                .font(.caption)
+                                .foregroundStyle(.red)
+                        } else if addressInUse {
+                            Text("Address \(address) is already in use.")
+                                .font(.caption)
+                                .foregroundStyle(.red)
+                        }
+
+                        if let nf = nextFree, nf != address {
+                            Button("Use Next Free (\(nf))") { address = nf }
+                        }
+                    }
+
+                    Section("Groups") {
+                        GroupsGrid(mask: $groupsMask)
+                    }
+
+                    Section("Optional") {
+                        TextField("Room", text: $room)
+                            .textInputAutocapitalization(.words)
+
+                        Picker("DT Type", selection: $dtType) {
+                            Text("—").tag("")
+                            Text("DT6").tag("DT6")
+                            Text("DT8").tag("DT8")
+                            Text("D4i").tag("D4i")
+                        }
+                        HStack {
+                            Text("Serial")
+                            Spacer()
+                            Text(device.serial)
+                                .font(.callout)
+                                .foregroundStyle(.secondary)
+                                .textSelection(.enabled)
+                        }
+                    }
+                }
+                .navigationTitle("Commission Device")
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") { dismiss() }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Save") {
+                            let trimmed = label.trimmingCharacters(in: .whitespacesAndNewlines)
+                            let fixture = Fixture(
+                                label: trimmed,
+                                shortAddress: address,
+                                groups: groupsMask,
+                                room: room.nilIfEmpty,
+                                serial: device.serial,
+                                dtTypeRaw: dtType.nilIfEmpty,
+                                commissionedAt: Date(),
+                                notes: "Commissioned via simulator"
+                            )
+                            project.fixtures.append(fixture)
+                            try? ctx.save()
+                            onCommissioned(device.serial)
+                            dismiss()
+                        }
+                        .disabled(!canSave)
+                    }
+                }
+            }
+        }
+
+        // Compute the next free short address 0…63 in this project
+        private static func nextAvailableAddress(in project: Item) -> Int? {
+            let used = Set(project.fixtures.map { $0.shortAddress })
+            for addr in 0...63 where !used.contains(addr) { return addr }
+            return nil
+        }
+    }
+
+    // --- Step 6d: Bulk commission sheet (nested) ---
+    private struct BulkCommissionSheet: View {
+        @Environment(\.dismiss) private var dismiss
+        @Environment(\.modelContext) private var ctx
+
+        @Bindable var project: Item
+        let devices: [SimDevice]                // visible devices to commission
+        var onDone: (_ commissionedSerials: [String], _ summary: String) -> Void
+
+        @State private var room: String = ""
+        @State private var groupsMask: UInt16 = 0
+        @State private var startAddress: Int
+
+        init(project: Item, devices: [SimDevice],
+             onDone: @escaping (_ commissionedSerials: [String], _ summary: String) -> Void) {
+            self._project = Bindable(project)
+            self.devices = devices
+            self.onDone = onDone
+            _startAddress = State(initialValue: ScanTab.nextAvailableAddress(in: project) ?? 0)
+        }
+
+        private var usedAddrs: Set<Int> { Set(project.fixtures.map { $0.shortAddress }) }
+        private var availableCount: Int { max(0, 64 - usedAddrs.count) }
+        private var willCommissionCount: Int { min(availableCountFromStart(), devices.count) }
+
+        var body: some View {
+            NavigationStack {
+                Form {
+                    Section {
+                        HStack {
+                            Text("Devices visible")
+                            Spacer()
+                            Text("\(devices.count)")
+                                .foregroundStyle(.secondary)
+                        }
+                        HStack {
+                            Text("Available addresses")
+                            Spacer()
+                            Text("\(availableCount)")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+
+                    Section("Defaults") {
+                        Stepper(value: $startAddress, in: 0...63) {
+                            HStack {
+                                Text("Start Address")
+                                Spacer()
+                                Text("\(startAddress)").monospacedDigit()
+                            }
+                        }
+                        GroupsGrid(mask: $groupsMask)
+                        TextField("Room (optional)", text: $room)
+                            .textInputAutocapitalization(.words)
+                    }
+
+                    if devices.count > 0 {
+                        Section {
+                            Text("Will commission up to **\(willCommissionCount)** of **\(devices.count)** devices based on free addresses from \(startAddress) to 63.")
+                                .font(.footnote)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+                .navigationTitle("Bulk Commission")
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") { dismiss() }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Commission All") {
+                            let (serials, committed, skipped) = performBulkCommission()
+                            let nextFree = ScanTab.nextAvailableAddress(in: project).map { "\($0)" } ?? "—"
+                            let summary = "Commissioned \(committed) of \(devices.count). Skipped \(skipped). Next free: \(nextFree)."
+                            onDone(serials, summary)
+                            dismiss()
+                        }
+                        .disabled(devices.isEmpty || willCommissionCount == 0)
+                    }
+                }
+            }
+        }
+
+        private func availableCountFromStart() -> Int {
+            var seen = usedAddrs
+            var addr = startAddress
+            var count = 0
+            while addr <= 63 {
+                if !seen.contains(addr) {
+                    count += 1
+                    seen.insert(addr)
+                }
+                addr += 1
+            }
+            return count
+        }
+
+        /// Commission sequentially from `startAddress`, skipping used; no wrap-around.
+        /// Returns: (commissionedSerials, committedCount, skippedCount)
+        private func performBulkCommission() -> ([String], Int, Int) {
+            var commissionedSerials: [String] = []
+            var used = usedAddrs
+            var addr = startAddress
+            var committed = 0
+
+            for dev in devices {
+                // next free address
+                while addr <= 63, used.contains(addr) { addr += 1 }
+                guard addr <= 63 else { break } // out of space
+
+                let fx = Fixture(
+                    label: dev.name,
+                    shortAddress: addr,
+                    groups: groupsMask,
+                    room: room.nilIfEmpty,
+                    serial: dev.serial,
+                    dtTypeRaw: dev.dtTypeRaw,
+                    commissionedAt: Date(),
+                    notes: "Bulk commissioned via simulator"
+                )
+                project.fixtures.append(fx)
+                used.insert(addr)
+                commissionedSerials.append(dev.serial)
+                committed += 1
+                addr += 1
+            }
+
+            if committed > 0 {
+                try? ctx.save()
+            }
+
+            let skipped = devices.count - committed
+            return (commissionedSerials, committed, skipped)
+        }
+    }
+}
+
+
+// MARK: - Simulation types & helpers
+
+private struct SimDevice: Identifiable, Hashable {
+    var id: String { serial }
+    let name: String       // e.g., "Pod4 7F3A"
+    let serial: String     // e.g., "C7-7F3A-219B"
+    let dtTypeRaw: String  // "DT6" | "DT8" | "D4i"
+    let rssi: Int          // -30…-90
+
+    var subtitle: String {
+        "\(dtTypeRaw)  •  S/N \(serial)  •  RSSI \(rssi)"
+    }
+
+    static func random(excluding existing: Set<String>) -> SimDevice {
+        var serial: String
+        repeat {
+            serial = String(
+                format: "%02X-%04X-%04X",
+                Int.random(in: 0...255),
+                Int.random(in: 0...0xFFFF),
+                Int.random(in: 0...0xFFFF)
+            )
+        } while existing.contains(serial)
+        let nick = String(serial.split(separator: "-")[1].suffix(4))
+        let dt = ["DT6", "DT8", "D4i"].randomElement()!
+        let rssi = Int.random(in: -82 ... -38)
+        let name = "Pod4 \(nick)"
+        return SimDevice(name: name, serial: serial, dtTypeRaw: dt, rssi: rssi)
+    }
+}
+
+/// First free short address 0…63 (or nil if full)
+private func nextAvailableAddress(for project: Item) -> Int? {
+    let used = Set(project.fixtures.map { $0.shortAddress })
+    for addr in 0...63 where !used.contains(addr) {
+        return addr
+    }
+    return nil
 }
 
 
