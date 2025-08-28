@@ -49,6 +49,9 @@ struct ExportView: View {
                 Label("Export PDF", systemImage: "doc.richtext")
             }
             .buttonStyle(.borderedProminent)
+            
+            JSONExportButton(project: project)
+            JSONImportButton(project: project)
 
             if let url = lastURL {
                 Text("Saved: \(url.lastPathComponent)")
