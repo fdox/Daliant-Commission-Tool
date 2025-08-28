@@ -31,7 +31,7 @@ struct ProjectDetailView: View {
                 .tabItem { Label("Rooms", systemImage: "square.grid.2x2") }
 
             // 4) Export
-            ExportTab()
+            ExportTab(project: project)
                 .tabItem { Label("Export", systemImage: "square.and.arrow.up") }
 
             // 5) Project Settings
@@ -398,6 +398,17 @@ private extension String {
 private struct ScanTab: View {
     @Environment(\.modelContext) private var ctx
     @Bindable var project: Item
+    
+    @AppStorage("commissioningMode") private var commissioningMode: CommissioningMode = .simulated
+
+    // Hold both implementations; we’ll route calls through `client` later.
+    private let simClient = SimCommissioningClient()
+    private let bleClient = BLECommissioningClient()
+
+    // Selected client for the current mode. (No behavior uses it yet in 7a.)
+    private var client: any CommissioningClient {
+        commissioningMode == .simulated ? simClient : bleClient
+    }
 
     @State private var isScanning = false
     @State private var results: [SimDevice] = []
@@ -481,6 +492,15 @@ private struct ScanTab: View {
                         )
                         .scaleEffect(isIdentifying && identifyPhase ? 1.01 : 1.0)
                         .animation(.easeInOut(duration: 0.18), value: identifyPhase)
+                        .overlay(alignment: .topTrailing) {
+                            Text("Mode: \(commissioningMode.displayName)")
+                                .font(.caption2)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(.ultraThinMaterial, in: Capsule())
+                                .accessibilityLabel("Commissioning mode \(commissioningMode.displayName)")
+                                .padding(12)
+                        }
                     }
                 }
             }
@@ -995,16 +1015,10 @@ private func roomGroups(for project: Item) -> [RoomGroup] {
 }
 
 private struct ExportTab: View {
+    let project: Item   // read-only is fine; we aren’t editing here
+
     var body: some View {
-        VStack(spacing: 16) {
-            Button("Export PDF") { }
-                .buttonStyle(.borderedProminent)
-                .disabled(true)
-            Text("Export is coming soon.")
-                .foregroundStyle(.secondary)
-            Spacer()
-        }
-        .padding()
+        ExportView(project: project)
     }
 }
 

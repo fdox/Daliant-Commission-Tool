@@ -5,6 +5,7 @@ struct SettingsView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @Query private var orgs: [Org]
+    @AppStorage("commissioningMode") private var commissioningMode: CommissioningMode = .simulated
 
     @State private var newJoinCode: String = ""
     @State private var errorMessage: String?
@@ -37,6 +38,20 @@ struct SettingsView: View {
             Section {
                 Button(role: .destructive) { signOut() } label: { Text("Sign out") }
             }
+#if DEBUG
+Section("Commissioning") {
+    Picker("Mode", selection: $commissioningMode) {
+        ForEach(CommissioningMode.allCases) { mode in
+            Text(mode.displayName).tag(mode)
+        }
+    }
+    .pickerStyle(.segmented)
+
+    Text("BLE is a stub in 7a; behavior remains simulated until later.")
+        .font(.footnote)
+        .foregroundStyle(.secondary)
+}
+#endif
         }
         .navigationTitle("Settings")
         .toolbar { ToolbarItem(placement: .topBarTrailing) { Button("Done") { dismiss() } } }

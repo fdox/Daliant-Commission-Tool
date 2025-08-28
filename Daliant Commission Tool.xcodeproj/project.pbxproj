@@ -20,6 +20,14 @@
 		9E505BA52E5B76FC00B1BFE2 /* ProjectWizardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E505BA42E5B76FB00B1BFE2 /* ProjectWizardView.swift */; };
 		9E505BA72E5B9DEB00B1BFE2 /* ProjectDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E505BA62E5B9DE900B1BFE2 /* ProjectDetailView.swift */; };
 		9E505BA92E5BC8D300B1BFE2 /* Fixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E505BA82E5BC8CF00B1BFE2 /* Fixture.swift */; };
+		9EF3D1F02E5FCD97005D624B /* CommissioningMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF3D1EF2E5FCD95005D624B /* CommissioningMode.swift */; };
+		9EF3D1F32E5FD4CF005D624B /* CommissioningClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF3D1F22E5FD4CD005D624B /* CommissioningClient.swift */; };
+		9EF3D1F52E5FD620005D624B /* SimCommissioningClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF3D1F42E5FD61E005D624B /* SimCommissioningClient.swift */; };
+		9EF3D1F72E5FD63A005D624B /* BLECommissioningClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF3D1F62E5FD638005D624B /* BLECommissioningClient.swift */; };
+		9EF3D1FA2E5FDC23005D624B /* PDFExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF3D1F92E5FDC22005D624B /* PDFExporter.swift */; };
+		9EF3D1FC2E5FDC58005D624B /* ExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF3D1FB2E5FDC56005D624B /* ExportView.swift */; };
+		9EF3D1FE2E60AEFF005D624B /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF3D1FD2E60AEFE005D624B /* ShareSheet.swift */; };
+		9EF3D2002E60B638005D624B /* Design.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF3D1FF2E60B637005D624B /* Design.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +64,15 @@
 		9E505BA42E5B76FB00B1BFE2 /* ProjectWizardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectWizardView.swift; sourceTree = "<group>"; };
 		9E505BA62E5B9DE900B1BFE2 /* ProjectDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailView.swift; sourceTree = "<group>"; };
 		9E505BA82E5BC8CF00B1BFE2 /* Fixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fixture.swift; sourceTree = "<group>"; };
+		9EF3D1E72E5FC97C005D624B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9EF3D1EF2E5FCD95005D624B /* CommissioningMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommissioningMode.swift; sourceTree = "<group>"; };
+		9EF3D1F22E5FD4CD005D624B /* CommissioningClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommissioningClient.swift; sourceTree = "<group>"; };
+		9EF3D1F42E5FD61E005D624B /* SimCommissioningClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimCommissioningClient.swift; sourceTree = "<group>"; };
+		9EF3D1F62E5FD638005D624B /* BLECommissioningClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLECommissioningClient.swift; sourceTree = "<group>"; };
+		9EF3D1F92E5FDC22005D624B /* PDFExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFExporter.swift; sourceTree = "<group>"; };
+		9EF3D1FB2E5FDC56005D624B /* ExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportView.swift; sourceTree = "<group>"; };
+		9EF3D1FD2E60AEFE005D624B /* ShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
+		9EF3D1FF2E60B637005D624B /* Design.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Design.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,13 +153,38 @@
 		9E505B952E5ACB4000B1BFE2 /* Daliant Commission Tool */ = {
 			isa = PBXGroup;
 			children = (
+				9EF3D1F82E5FDC15005D624B /* Export */,
+				9EF3D1EE2E5FCD62005D624B /* Commissioning */,
 				9E505B8C2E5ACB4000B1BFE2 /* Models */,
 				9E505B8D2E5ACB4000B1BFE2 /* PreviewContent */,
 				9E505B922E5ACB4000B1BFE2 /* Views */,
 				9E505B932E5ACB4000B1BFE2 /* Assets.xcassets */,
 				9E505B942E5ACB4000B1BFE2 /* Daliant_Commission_ToolApp.swift */,
+				9EF3D1E72E5FC97C005D624B /* Info.plist */,
 			);
 			path = "Daliant Commission Tool";
+			sourceTree = "<group>";
+		};
+		9EF3D1EE2E5FCD62005D624B /* Commissioning */ = {
+			isa = PBXGroup;
+			children = (
+				9EF3D1F62E5FD638005D624B /* BLECommissioningClient.swift */,
+				9EF3D1F42E5FD61E005D624B /* SimCommissioningClient.swift */,
+				9EF3D1F22E5FD4CD005D624B /* CommissioningClient.swift */,
+				9EF3D1EF2E5FCD95005D624B /* CommissioningMode.swift */,
+			);
+			path = Commissioning;
+			sourceTree = "<group>";
+		};
+		9EF3D1F82E5FDC15005D624B /* Export */ = {
+			isa = PBXGroup;
+			children = (
+				9EF3D1FF2E60B637005D624B /* Design.swift */,
+				9EF3D1FD2E60AEFE005D624B /* ShareSheet.swift */,
+				9EF3D1FB2E5FDC56005D624B /* ExportView.swift */,
+				9EF3D1F92E5FDC22005D624B /* PDFExporter.swift */,
+			);
+			path = Export;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -286,13 +328,21 @@
 				9E505B972E5ACB4000B1BFE2 /* Daliant_Commission_ToolApp.swift in Sources */,
 				9E505B982E5ACB4000B1BFE2 /* OrgOnboardingView.swift in Sources */,
 				9E505B992E5ACB4000B1BFE2 /* ContentView.swift in Sources */,
+				9EF3D1F02E5FCD97005D624B /* CommissioningMode.swift in Sources */,
 				9E505BA72E5B9DEB00B1BFE2 /* ProjectDetailView.swift in Sources */,
 				9E505BA92E5BC8D300B1BFE2 /* Fixture.swift in Sources */,
+				9EF3D1F72E5FD63A005D624B /* BLECommissioningClient.swift in Sources */,
+				9EF3D2002E60B638005D624B /* Design.swift in Sources */,
 				9E505B9A2E5ACB4000B1BFE2 /* ProjectsHomeView.swift in Sources */,
 				9E505B9B2E5ACB4000B1BFE2 /* SignInView.swift in Sources */,
 				9E505BA52E5B76FC00B1BFE2 /* ProjectWizardView.swift in Sources */,
 				9E505B9C2E5ACB4000B1BFE2 /* Item.swift in Sources */,
+				9EF3D1FA2E5FDC23005D624B /* PDFExporter.swift in Sources */,
+				9EF3D1FC2E5FDC58005D624B /* ExportView.swift in Sources */,
+				9EF3D1F32E5FD4CF005D624B /* CommissioningClient.swift in Sources */,
+				9EF3D1FE2E60AEFF005D624B /* ShareSheet.swift in Sources */,
 				9E505BA32E5AD91900B1BFE2 /* PreviewSeed.swift in Sources */,
+				9EF3D1F52E5FD620005D624B /* SimCommissioningClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -379,6 +429,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "$(SRCROOT)/Daliant Commission Tool/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -437,6 +489,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -485,6 +538,7 @@
 				DEVELOPMENT_TEAM = U4QP29H236;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "$(SRCROOT)/Daliant Commission Tool/Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
